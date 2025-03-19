@@ -37,7 +37,7 @@ public class NormalCell {
     }
 
     public boolean isDangerous() {
-
+        return (this.inhabitantType != InhabitantType.NONE);
     }
 
     @Override
