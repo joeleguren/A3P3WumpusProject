@@ -9,4 +9,7 @@ package inscaparrella.view;
  */
 
 public class WumpusMain {
+    public static void main(String[] args) {
+
+    }
 }
