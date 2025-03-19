@@ -1,7 +1,6 @@
 package inscaparrella.view;
 
 /**
- *
  * Autors:
  *
  * Joel Eguren
