@@ -10,7 +10,7 @@ public class NormalCell {
     }
 
     public NormalCell(int x, int y) {
-
+        //Cridar constructor de la superclasse
     }
 
     public NormalCell(NormalCell nc) {
