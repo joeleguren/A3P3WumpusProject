@@ -26,7 +26,14 @@ public class NormalCell {
     }
 
     public String emitEcho() {
+        String retorn = "";
+        if (this.inhabitantType == InhabitantType.WUMPUS) {
+            retorn += "gggrrr... gggGGGGGRRRRRrrr...";
+        } else if (this.inhabitantType == InhabitantType.BAT) {
+            retorn += "Flap, flap, flap";
+        }
 
+        return retorn;
     }
 
     public boolean isDangerous() {
