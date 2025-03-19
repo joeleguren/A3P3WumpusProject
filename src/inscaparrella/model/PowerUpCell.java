@@ -1,4 +1,4 @@
-package model;
+package inscaparrella.model;
 
 public class PowerUpCell {
 }

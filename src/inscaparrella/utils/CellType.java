@@ -1,4 +1,4 @@
-package utils;
+package inscaparrella.utils;
 
 public enum CellType {
     NONE,                   //0

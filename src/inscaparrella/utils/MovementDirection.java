@@ -1,6 +1,6 @@
-package utils;
+package inscaparrella.utils;
 
-public enum ShootDirection {
+public enum MovementDirection {
     UP,             //0
     DOWN,           //1
     LEFT,           //2

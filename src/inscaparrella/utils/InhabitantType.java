@@ -1,4 +1,4 @@
-package utils;
+package inscaparrella.utils;
 
 public enum InhabitantType {
     NONE,               //0
