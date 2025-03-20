@@ -9,6 +9,7 @@ public class NormalCell extends Cell{
     private InhabitantType itype;
 
     public NormalCell() {
+        super();
         super.ctype = CellType.NORMAL;
         this.itype = InhabitantType.NONE;
     }
@@ -56,7 +57,6 @@ public class NormalCell extends Cell{
         } else {
             retorn += "Tipus NORMAL";
         }
-
         return retorn;
     }
 
