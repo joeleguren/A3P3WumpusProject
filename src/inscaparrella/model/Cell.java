@@ -14,17 +14,21 @@ public abstract class Cell {
         this.row = 0;
         this.col = 0;
         this.ctype = CellType.NONE;
+        this.open = false;
     }
 
     public Cell(int row, int col) {
         this.row = row;
         this.col = col;
+        this.ctype = CellType.NONE;
+        this.open = false;
     }
 
     public Cell(Cell cell) {
         this.row = cell.row;
         this.col = cell.col;
         this.ctype = cell.ctype;
+        this.open = cell.open;
     }
 
     public CellType getCtype() {
