@@ -32,3 +32,4 @@ public class WellCell extends Cell {
         return super.toString() + " - Tipus " + this.ctype;
     }
 }
+
