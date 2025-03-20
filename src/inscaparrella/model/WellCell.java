@@ -1,8 +1,7 @@
 package inscaparrella.model;
-
 import inscaparrella.utils.CellType;
 
-public class WellCell extends Cell{
+public class WellCell extends Cell {
 
     public WellCell() {
         super();
@@ -33,4 +32,3 @@ public class WellCell extends Cell{
         return super.toString() + " - Tipus " + this.ctype;
     }
 }
-
