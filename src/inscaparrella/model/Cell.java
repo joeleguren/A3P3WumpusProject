@@ -11,8 +11,8 @@ public abstract class Cell {
     protected boolean open;
 
     public Cell() {
-        this.row = 0;
-        this.col = 0;
+        this.row = -1;
+        this.col = -1;
         this.ctype = CellType.NONE;
         this.open = false;
     }
@@ -51,6 +51,11 @@ public abstract class Cell {
     public void openCell() {
         this.open = true;
     }
+
+    public abstract String emitEcho();
+
+    public abstract boolean isDangerous();
+
 
     @Override
     public String toString() {
