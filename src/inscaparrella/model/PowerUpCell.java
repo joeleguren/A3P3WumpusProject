@@ -8,7 +8,7 @@ import java.util.Random;
 public class PowerUpCell extends Cell{
 
     PowerUp power;
-    // Entre els poders random s'ha d'incloure el NONE???
+    // Entre els poders random s'ha d'incloure el NONE??
 
     public PowerUpCell() {
         super();
