@@ -7,4 +7,11 @@ public class WumpusLaberynth {
     private int[] ppos;
     private int[] wumpuspos;
     private int[] batspos;
+
+    WumpusLaberynth() {
+        this.laberynth = new ArrayList<>();
+        this.ppos = null;
+        this.wumpuspos = null;
+        this.batspos = null;
+    }
 }
