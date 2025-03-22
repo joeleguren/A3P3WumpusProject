@@ -1,5 +1,7 @@
 package inscaparrella.model;
 
+import inscaparrella.utils.CellType;
+
 import java.util.ArrayList;
 
 public class WumpusLaberynth {
@@ -19,12 +21,21 @@ public class WumpusLaberynth {
         ArrayList<ArrayList<Cell>> list = new ArrayList<>();
 
         for (int i = 0; i < this.laberynth.size(); i++) {
+            list.add(new ArrayList<Cell>());
             for (int j = 0; j < this.laberynth.get(i).size(); j++) {
-                //list.get(j).add(new Cell(this.laberynth.get(j)));
+
+                if (this.laberynth.get(i).get(j).ctype == CellType.NORMAL) {
+                    list.get(i).add(new NormalCell((NormalCell) this.laberynth.get(i).get(j)));
+
+                } else if (this.laberynth.get(i).get(j).ctype == CellType.WELL) {
+                    list.get(i).add(new WellCell((WellCell) this.laberynth.get(i).get(j)));
+
+                } else if (this.laberynth.get(i).get(j).ctype == CellType.POWERUP) {
+                    list.get(i).add(new PowerUpCell((PowerUpCell) this.laberynth.get(i).get(j)));
+                }
             }
         }
-
-        return laberynth;
+        return list;
     }
 
     public void setLaberynth(ArrayList<ArrayList<Cell>> laberynth) {
