@@ -4,9 +4,15 @@ import inscaparrella.utils.CellType;
 import inscaparrella.utils.InhabitantType;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class WumpusLaberynth {
     private static final int ENTITY = 2;
+    private static final int MIN_BOARD_SIZE = 5;
+    private static final int MAX_BOARD_SIZE = 15;
+    private static final int MIN_WELL_CELLS = 2;
+    private static final int MIN_POWER_CELLS = 2;
+    private static final int MIN_BATS_ENTITIES = 2;
     private ArrayList<ArrayList<Cell>> laberynth;
     private int[] ppos;
     private int[] wumpuspos;
@@ -67,6 +73,95 @@ public class WumpusLaberynth {
             }
         }
         this.laberynth = laberynth;
+    }
+
+    public void createNewLaberynth() {
+        Random rnd = new Random();
+        int rows = rnd.nextInt(MIN_BOARD_SIZE, (MAX_BOARD_SIZE+1));
+        int cols = rnd.nextInt(MIN_BOARD_SIZE, (MAX_BOARD_SIZE+1));
+        int totalBoardCells = rows * cols;
+
+        int maxWellCells = 5 * totalBoardCells / 100;
+        int maxPowerCells = 10 * totalBoardCells / 100;
+
+        int totalWellCells = rnd.nextInt(MIN_WELL_CELLS, (maxWellCells+1));
+        int totalPowerCells = rnd.nextInt(MIN_POWER_CELLS, (maxPowerCells+1));
+
+
+        /////////////////////////////////////////////
+        int normalCells = countNormalCells(false);
+        int maxBats = 10 * normalCells / 100;
+        int totalBats = rnd.nextInt(MIN_BATS_ENTITIES, (maxBats+1));
+    }
+
+    public int[] getInitialCell() {
+
+        int[] pos = null;
+
+        if (!(laberynth.isEmpty())) {
+            pos = new int[2];
+            boolean placed = false;
+            Random r = new Random();
+            int numRnd = r.nextInt(0, countNormalCells(true)+1);
+
+            int contador = 0;
+            int i = 0;
+            int j = 0;
+
+            while (i < laberynth.size() && !placed) {
+                while (j < laberynth.get(i).size() && !placed) {
+                    if (laberynth.get(i).get(j).ctype == CellType.NORMAL) {
+                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j);
+                        if (ncell.getInhabitant() == InhabitantType.NONE) {
+                            if (contador==numRnd) {
+                                pos[0]=i;
+                                pos[1]=j;
+                                placed = true;
+                            }
+                            contador++;
+                        }
+                    }
+                    j++;
+                }
+                i++;
+            }
+        }
+        return pos;
+    }
+
+    /**
+     * Retorna el nombre de NormalCells depenent el paràmetre
+     * @param inhabited Boolean si és True retorna count caselles NORMAL deshabitades, si és False retorna count totes caselles NORMAL.
+     * @return
+     */
+    private int countNormalCells(boolean inhabited) {
+        
+        int count = 0;
+        
+        if (inhabited) {
+            for (int i = 0; i < laberynth.size(); i++) {
+                for (int j = 0; j < laberynth.get(i).size(); j++) {
+                    if (laberynth.get(i).get(j).ctype == CellType.NORMAL) {
+                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j);
+                        if (ncell.getInhabitant() == InhabitantType.NONE) {
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            for (int i = 0; i < laberynth.size(); i++) {
+                for (int j = 0; j < laberynth.get(i).size(); j++) {
+
+                    if (laberynth.get(i).get(j).ctype == CellType.NORMAL) {
+                        count++;
+                    }
+                }
+            }
+        }
+        
+        return count;
     }
 
     /**
