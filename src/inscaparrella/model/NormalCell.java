@@ -21,6 +21,7 @@ public class NormalCell extends Cell{
     }
 
     public NormalCell(NormalCell nc) {
+        super(nc); // Aqui he afegit cridar al constructor còpia del super (Sóc Joel Eguren)
         this.itype = nc.itype;
     }
 
