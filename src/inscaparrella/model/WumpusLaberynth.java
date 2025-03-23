@@ -13,6 +13,9 @@ public class WumpusLaberynth {
     private static final int MIN_WELL_CELLS = 2;
     private static final int MIN_POWER_CELLS = 2;
     private static final int MIN_BATS_ENTITIES = 2;
+    private static final double FIVE_PERCENT = 0.05;
+    private static final double TEN_PERCENT = 0.1;
+    private static final int TOTAL_WUMPUS = 1;
     private ArrayList<ArrayList<Cell>> laberynth;
     private int[] ppos;
     private int[] wumpuspos;
@@ -60,6 +63,7 @@ public class WumpusLaberynth {
                     this.laberynth.get(i).add(ncell);
 
                     if (ncell.getInhabitant() == InhabitantType.WUMPUS) {
+                        this.wumpuspos = new int[ENTITY];
                         this.wumpuspos[0] = i;
                         this.wumpuspos[1] = j;
                     }
@@ -76,30 +80,33 @@ public class WumpusLaberynth {
     }
 
     public void createNewLaberynth() {
-        Random rnd = new Random();
-        int rows = rnd.nextInt(MIN_BOARD_SIZE, (MAX_BOARD_SIZE+1));
-        int cols = rnd.nextInt(MIN_BOARD_SIZE, (MAX_BOARD_SIZE+1));
+        Random r = new Random();
+        int rows = r.nextInt(MIN_BOARD_SIZE, (MAX_BOARD_SIZE+1)); // Generar nombre files
+        int cols = r.nextInt(MIN_BOARD_SIZE, (MAX_BOARD_SIZE+1)); // Generar nombre columnes
         int totalBoardCells = rows * cols;
 
-        int maxWellCells = 5 * totalBoardCells / 100;
-        int maxPowerCells = 10 * totalBoardCells / 100;
+        initLaberynth(rows, cols);  // Inicialitzar tauler només amb NormalCells
 
-        int totalWellCells = rnd.nextInt(MIN_WELL_CELLS, (maxWellCells+1));
-        int totalPowerCells = rnd.nextInt(MIN_POWER_CELLS, (maxPowerCells+1));
+        int maxWellCells = (int) (totalBoardCells * FIVE_PERCENT); // Calcular màxim de WellCells
+        int totalWellCells = r.nextInt(MIN_WELL_CELLS, (maxWellCells+1)); // Calcular total de WellCells que contindrà laberynth
+        placeSpecialCell(CellType.WELL, totalWellCells); // Col·loca les WellCells al laberynth
 
+        int maxPowerCells = (int) (totalBoardCells * TEN_PERCENT); // Calcular màxim de PowerUpCells
+        int totalPowerCells = r.nextInt(MIN_POWER_CELLS, (maxPowerCells+1)); // Calcular total de PowerUp Cells que contindrà laberynth
+        placeSpecialCell(CellType.POWERUP, totalPowerCells); // Col·loca les PowerUpCells al laberynth
 
-        /////////////////////////////////////////////
-        int normalCells = countNormalCells(false);
-        int maxBats = 10 * normalCells / 100;
-        int totalBats = rnd.nextInt(MIN_BATS_ENTITIES, (maxBats+1));
+        int normalCells = countNormalCells(false); // Calcular nombre de NormalCells
+        int maxBats = (int) (normalCells * TEN_PERCENT); // Calcular màxim de Ratpenats
+        int totalBats = r.nextInt(MIN_BATS_ENTITIES, (maxBats+1)); // Calcular total de Ratpenats que contindrà laberynth
+
+        placeEntity(InhabitantType.BAT, totalBats); // Col·loca els ratpenats al laberynth
+        placeEntity(InhabitantType.WUMPUS, TOTAL_WUMPUS); // Col·loca el Wupus al laberynth
     }
+
 
     public int[] getInitialCell() {
 
-        int[] pos = null;
-
         if (!(laberynth.isEmpty())) {
-            pos = new int[2];
             boolean placed = false;
             Random r = new Random();
             int numRnd = r.nextInt(0, countNormalCells(true)+1);
@@ -110,13 +117,15 @@ public class WumpusLaberynth {
 
             while (i < laberynth.size() && !placed) {
                 while (j < laberynth.get(i).size() && !placed) {
+
                     if (laberynth.get(i).get(j).ctype == CellType.NORMAL) {
-                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j);
-                        if (ncell.getInhabitant() == InhabitantType.NONE) {
+                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j); // Generem una referència a la NormalCell
+                        if (ncell.getInhabitant() == InhabitantType.NONE) { // Consultem Inhabitant en la referència ncell
                             if (contador==numRnd) {
-                                pos[0]=i;
-                                pos[1]=j;
+                                this.ppos[0]=i;
+                                this.ppos[1]=j;
                                 placed = true;
+                                laberynth.get(i).get(j).openCell(); // Obrim la cel·la
                             }
                             contador++;
                         }
@@ -126,46 +135,134 @@ public class WumpusLaberynth {
                 i++;
             }
         }
-        return pos;
+        return this.ppos;
+    }
+
+
+    /**
+     * Col·loca aleatòriament al this.laberynth tantes entitats itype com totalEntities hi hagi.
+     * Emmagatzema les posicions dels itype en el seu respectiu array.
+     * @param itype Tipus d'entitat a col·locar.
+     * @param totalEntities Nombre d'entitats que es colocaran en el tauler.
+     */
+    private void placeEntity(InhabitantType itype, int totalEntities) {
+        int count = 0;
+        while (count < totalEntities) {
+            boolean added = false;
+            while (!added) {
+                int[] rndpos = randomCoordsLaberynth();
+                if (this.laberynth.get(rndpos[0]).get(rndpos[1]).getCtype() == CellType.NORMAL) {
+
+                    if (itype == InhabitantType.BAT) {
+                        NormalCell ncell = new NormalCell(rndpos[0], rndpos[1]);
+                        ncell.setInhabitant(InhabitantType.BAT);
+                        this.laberynth.get(rndpos[0]).set(rndpos[1], new NormalCell(ncell));
+                        added = true;
+
+                    } else if (itype == InhabitantType.WUMPUS) {
+                        NormalCell ncell = new NormalCell(rndpos[0], rndpos[1]);
+                        ncell.setInhabitant(InhabitantType.WUMPUS);
+                        this.laberynth.get(rndpos[0]).set(rndpos[1], new NormalCell(ncell));
+                        // this.wumpuspos = new int[ENTITY*TOTAL_WUMPUS]; Per si vulguessim col·locar mes Wumpus
+                        this.wumpuspos = new int[ENTITY];
+                        this.wumpuspos[0] = rndpos[0];
+                        this.wumpuspos[1] = rndpos[1];
+                        added = true;
+                    }
+                }
+                count++;
+            }
+        }
+        if (itype == InhabitantType.BAT) initBats(this.laberynth);
+    }
+
+    /**
+     * Col·loca aleatòriament en el this.laberynth la quantitat de tipus de cel·les especificades en els paràmetres.
+     * Les cel·les especials només es col·locaran sobre cel·les de tipus NormalCell.
+     * @param cellType Tipus de cel·la a col·locar en el tauler.
+     * @param totalTypeCell Quantitat de cel·les que es col·locaran en el tauler.
+     */
+    private void placeSpecialCell(CellType cellType, int totalTypeCell) {
+        int count = 0;
+        while (count < totalTypeCell) {
+            boolean added = false;
+            while (!added) {
+                int[] rndpos = randomCoordsLaberynth();
+                if (this.laberynth.get(rndpos[0]).get(rndpos[1]).getCtype() == CellType.NORMAL) {
+
+                    if (cellType == CellType.WELL) {
+                        WellCell wcell = new WellCell(rndpos[0],rndpos[1]);
+                        this.laberynth.get(rndpos[0]).set(rndpos[1], new WellCell(wcell));
+                        added = true;
+
+                    } else if (cellType == CellType.POWERUP) {
+                        PowerUpCell pcell = new PowerUpCell(rndpos[0], rndpos[1]);
+                        this.laberynth.get(rndpos[0]).set(rndpos[1], new PowerUpCell(pcell));
+                        added = true;
+                    }
+                }
+                count++;
+            }
+        }
+    }
+
+    /**
+     * Genera unes cordenades random dins del this.laberynth
+     * @return Array de int[2] dos coordenades
+     */
+    private int[] randomCoordsLaberynth() {
+        Random r = new Random();
+        int[] randomCoords = new int[2];
+        int nrows = this.laberynth.size();
+        int ncols = this.laberynth.get(0).size();
+        randomCoords[0] = r.nextInt(0, nrows); //row
+        randomCoords[1] = r.nextInt(0, ncols); //col
+        return randomCoords;
+    }
+
+    /**
+     * Inicialitza la matriu laberynth de la Classe amb new NormalCells(parametritzades) deshabitades.
+     * @param cols Nombre total de columnes
+     * @param rows Nombre total de files
+     */
+    private void initLaberynth(int rows, int cols) {
+        for (int i = 0; i < rows; i++) {
+            this.laberynth.add(new ArrayList<Cell>());
+            for (int j = 0; j < cols; j++) {
+                this.laberynth.get(i).add(new NormalCell(i, j));
+            }
+        }
     }
 
     /**
      * Retorna el nombre de NormalCells depenent el paràmetre
-     * @param inhabited Boolean si és True retorna count caselles NORMAL deshabitades, si és False retorna count totes caselles NORMAL.
+     * @param inhabited Boolean que si és True retorna count caselles NORMAL deshabitades, si és False retorna count totes caselles NORMAL.
      * @return
      */
     private int countNormalCells(boolean inhabited) {
         
         int count = 0;
-        
-        if (inhabited) {
-            for (int i = 0; i < laberynth.size(); i++) {
-                for (int j = 0; j < laberynth.get(i).size(); j++) {
-                    if (laberynth.get(i).get(j).ctype == CellType.NORMAL) {
+
+        for (int i = 0; i < laberynth.size(); i++) {
+            for (int j = 0; j < laberynth.get(i).size(); j++) {
+                if (laberynth.get(i).get(j).ctype == CellType.NORMAL) {
+                    if (inhabited) {
                         NormalCell ncell = (NormalCell) laberynth.get(i).get(j);
                         if (ncell.getInhabitant() == InhabitantType.NONE) {
                             count++;
                         }
                     }
-                }
-            }
-        }
-        else {
-            for (int i = 0; i < laberynth.size(); i++) {
-                for (int j = 0; j < laberynth.get(i).size(); j++) {
-
-                    if (laberynth.get(i).get(j).ctype == CellType.NORMAL) {
+                    else {
                         count++;
                     }
                 }
             }
         }
-        
         return count;
     }
 
     /**
-     * Inicialitza l'array batspos amb el nombre de ratpenats que rep de la funció getBatsCount.
+     * Inicialitza l'array atribut de classe batspos amb el nombre de ratpenats que rep de la funció getBatsCount.
      * Recorre el laberint passat per paràmetre, per cada cel·la que contingui un ratpenat (bat) emmagatzema les dues coordenades del ratpenat dins de batspos.
      * Cada coordenada s'emmagatzemarà en una posició de l'array.
      * @param laberynth ArrayList de ArrayList de Cell - Laberint que es desitjà inicialitzar el seu array de ratpenats.

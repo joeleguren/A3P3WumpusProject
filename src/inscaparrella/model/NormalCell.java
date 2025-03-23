@@ -14,8 +14,8 @@ public class NormalCell extends Cell{
         this.itype = InhabitantType.NONE;
     }
 
-    public NormalCell(int x, int y) {
-        super(x,y);
+    public NormalCell(int row, int col) { // Canviem nom dels atributs per a no liar-nos (a row i a col), abans "x" i "y"
+        super(row,col);
         super.ctype = CellType.NORMAL;
         this.itype = InhabitantType.NONE;
     }

@@ -8,8 +8,8 @@ public class WellCell extends Cell {
         super.ctype = CellType.WELL;
     }
 
-    public WellCell(int x, int y) {
-        super(x, y);
+    public WellCell(int row, int col) { // Canviem nom dels atributs per a no liar-nos (a row i a col), abans "x" i "y"
+        super(row, col);
         super.ctype = CellType.WELL;
     }
 
