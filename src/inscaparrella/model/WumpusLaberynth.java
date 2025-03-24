@@ -2,20 +2,23 @@ package inscaparrella.model;
 
 import inscaparrella.utils.CellType;
 import inscaparrella.utils.InhabitantType;
+import inscaparrella.utils.MovementDirection;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class WumpusLaberynth {
     private static final int ENTITY = 2;
+    private static final int COORDS = 2;
     private static final int MIN_BOARD_SIZE = 5;
     private static final int MAX_BOARD_SIZE = 15;
     private static final int MIN_WELL_CELLS = 2;
     private static final int MIN_POWER_CELLS = 2;
     private static final int MIN_BATS_ENTITIES = 2;
+    private static final int TOTAL_WUMPUS = 1;
     private static final double FIVE_PERCENT = 0.05;
     private static final double TEN_PERCENT = 0.1;
-    private static final int TOTAL_WUMPUS = 1;
+
     private ArrayList<ArrayList<Cell>> laberynth;
     private int[] ppos;
     private int[] wumpuspos;
@@ -138,6 +141,77 @@ public class WumpusLaberynth {
         return this.ppos;
     }
 
+    public int[] movePlayer(MovementDirection dir) {
+        int[] newCellMoved = new int[COORDS];
+
+        if (!this.laberynth.isEmpty() && ppos != null) {
+            if (isMovementValid(dir)) { // Mirem si el moviment no surt dels limits del laberint
+
+                if (dir == MovementDirection.UP) {
+                    ppos[0] -= 1;
+                    this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
+                    newCellMoved[0] = ppos[0];
+                    newCellMoved[1] = ppos[1];
+
+                } else if (dir == MovementDirection.DOWN) {
+                    ppos[0] += 1;
+                    this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
+                    newCellMoved[0] = ppos[0];
+                    newCellMoved[1] = ppos[1];
+
+                } else if (dir == MovementDirection.LEFT) {
+                    ppos[1] -= 1;
+                    this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
+                    newCellMoved[0] = ppos[0];
+                    newCellMoved[1] = ppos[1];
+
+                } else if (dir == MovementDirection.RIGHT) {
+                    ppos[1] += 1;
+                    this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
+                    newCellMoved[0] = ppos[0];
+                    newCellMoved[1] = ppos[1];
+                }
+            } else {
+                newCellMoved = null;
+            }
+        } else {
+            newCellMoved = null;
+        }
+
+        return newCellMoved;
+    }
+
+    private boolean checkCorrectCell(int row, int col) {
+        boolean isValid = false;
+
+        if (!this.laberynth.isEmpty()) {
+            isValid = (row >= 0 && row < this.laberynth.size() && col >= 0 && col < this.laberynth.get(0).size());
+        }
+
+        return isValid;
+    }
+
+    /**
+     * Comprova si un moviment en {@code this.laberynth} es vàlid, és a dir, retorna {@code false} si {@code MovementDirection dir} es surt de les dimensions del {@code this.laberynth}.
+     * @param dir Direcció de un moviment, que pot ser {@code MovementDirection.UP, MovementDirection.DOWN, MovementDirection.LEFT, MovementDirection.RIGHT}
+     * @return {@code true} Si el moviment dir es vàlid
+     */
+    private boolean isMovementValid(MovementDirection dir) {
+        boolean isValid = false;
+
+        if (dir == MovementDirection.UP && checkCorrectCell(ppos[0]-1, ppos[1])) {
+            isValid = true;
+        } else if (dir == MovementDirection.DOWN && checkCorrectCell(ppos[0]+1, ppos[1])) {
+            isValid = true;
+        } else if (dir == MovementDirection.LEFT && checkCorrectCell(ppos[0],ppos[1]-1)) {
+            isValid = true;
+        } else if (dir == MovementDirection.RIGHT && checkCorrectCell(ppos[0],ppos[1]+1)) {
+            isValid = true;
+        }
+
+        return isValid;
+    }
+
 
     /**
      * Col·loca aleatòriament al this.laberynth tantes entitats itype com totalEntities hi hagi.
@@ -151,7 +225,7 @@ public class WumpusLaberynth {
             boolean added = false;
             while (!added) {
                 int[] rndpos = randomCoordsLaberynth();
-                if (this.laberynth.get(rndpos[0]).get(rndpos[1]).getCtype() == CellType.NORMAL) {
+                if (rndpos != null && this.laberynth.get(rndpos[0]).get(rndpos[1]).getCtype() == CellType.NORMAL) {
 
                     if (itype == InhabitantType.BAT) {
                         NormalCell ncell = new NormalCell(rndpos[0], rndpos[1]);
@@ -183,40 +257,48 @@ public class WumpusLaberynth {
      * @param totalTypeCell Quantitat de cel·les que es col·locaran en el tauler.
      */
     private void placeSpecialCell(CellType cellType, int totalTypeCell) {
-        int count = 0;
-        while (count < totalTypeCell) {
-            boolean added = false;
-            while (!added) {
-                int[] rndpos = randomCoordsLaberynth();
-                if (this.laberynth.get(rndpos[0]).get(rndpos[1]).getCtype() == CellType.NORMAL) {
+        if (!this.laberynth.isEmpty()) {
+            int count = 0;
+            while (count < totalTypeCell) {
+                boolean added = false;
+                while (!added) {
+                    int[] rndpos = randomCoordsLaberynth();
+                    if (this.laberynth.get(rndpos[0]).get(rndpos[1]).getCtype() == CellType.NORMAL) {
 
-                    if (cellType == CellType.WELL) {
-                        WellCell wcell = new WellCell(rndpos[0],rndpos[1]);
-                        this.laberynth.get(rndpos[0]).set(rndpos[1], new WellCell(wcell));
-                        added = true;
+                        if (cellType == CellType.WELL) {
+                            WellCell wcell = new WellCell(rndpos[0],rndpos[1]);
+                            this.laberynth.get(rndpos[0]).set(rndpos[1], new WellCell(wcell));
+                            added = true;
 
-                    } else if (cellType == CellType.POWERUP) {
-                        PowerUpCell pcell = new PowerUpCell(rndpos[0], rndpos[1]);
-                        this.laberynth.get(rndpos[0]).set(rndpos[1], new PowerUpCell(pcell));
-                        added = true;
+                        } else if (cellType == CellType.POWERUP) {
+                            PowerUpCell pcell = new PowerUpCell(rndpos[0], rndpos[1]);
+                            this.laberynth.get(rndpos[0]).set(rndpos[1], new PowerUpCell(pcell));
+                            added = true;
+                        }
                     }
+                    count++;
                 }
-                count++;
             }
         }
     }
 
     /**
-     * Genera unes cordenades random dins del this.laberynth
-     * @return Array de int[2] dos coordenades
+     * Genera unes cordenades random dins del {@code this.laberynth}
+     * @return {@code int[2]} Retorna dos coordenades
      */
     private int[] randomCoordsLaberynth() {
-        Random r = new Random();
-        int[] randomCoords = new int[2];
-        int nrows = this.laberynth.size();
-        int ncols = this.laberynth.get(0).size();
-        randomCoords[0] = r.nextInt(0, nrows); //row
-        randomCoords[1] = r.nextInt(0, ncols); //col
+
+        int[] randomCoords = null;
+
+        if (!this.laberynth.isEmpty()) {
+            Random r = new Random();
+            randomCoords = new int[COORDS];
+            int nrows = this.laberynth.size();
+            int ncols = this.laberynth.get(0).size();
+            randomCoords[0] = r.nextInt(0, nrows); //row
+            randomCoords[1] = r.nextInt(0, ncols); //col
+        }
+
         return randomCoords;
     }
 
@@ -235,7 +317,7 @@ public class WumpusLaberynth {
     }
 
     /**
-     * Retorna el nombre de NormalCells depenent el paràmetre
+     * Retorna el nombre de NormalCells depenent el paràmetre.
      * @param inhabited Boolean que si és True retorna count caselles NORMAL deshabitades, si és False retorna count totes caselles NORMAL.
      * @return
      */
@@ -269,7 +351,7 @@ public class WumpusLaberynth {
      */
     private void initBats(ArrayList<ArrayList<Cell>> laberynth) {
 
-        int batsCount = getBatsCount(laberynth);
+        int batsCount = getBatsCount(laberynth); // Obtenim nombre bats com a e ENTITY
 
         this.batspos = new int[batsCount];
         int batsIndex = 0;
