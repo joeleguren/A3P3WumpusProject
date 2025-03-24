@@ -1,8 +1,6 @@
 package inscaparrella.model;
 
-import inscaparrella.utils.CellType;
-import inscaparrella.utils.InhabitantType;
-import inscaparrella.utils.MovementDirection;
+import inscaparrella.utils.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -123,7 +121,7 @@ public class WumpusLaberynth {
 
                     if (laberynth.get(i).get(j).ctype == CellType.NORMAL) {
                         NormalCell ncell = (NormalCell) laberynth.get(i).get(j); // Generem una referència a la NormalCell
-                        if (ncell.getInhabitant() == InhabitantType.NONE) { // Consultem Inhabitant en la referència ncell
+                        if (ncell.getInhabitant() == InhabitantType.NONE) { // Consultem Inhabitant en la referència ncell, no ha de tindre
                             if (contador==numRnd) {
                                 this.ppos[0]=i;
                                 this.ppos[1]=j;
@@ -179,6 +177,55 @@ public class WumpusLaberynth {
         }
 
         return newCellMoved;
+    }
+
+    public Danger getDanger() {
+        Danger d = Danger.NONE;
+
+        if (!this.laberynth.isEmpty() && ppos != null) {
+            if (this.laberynth.get(ppos[0]).get(ppos[1]).getCtype() == CellType.WELL) {
+                d = Danger.WELL; // Si la cel·la actual del jugador és de tipus WELL, el perill sera a l'igual de tipus WELL
+
+            } else if (this.laberynth.get(ppos[0]).get(ppos[1]).getCtype() == CellType.NORMAL) {
+                NormalCell ncell = new NormalCell((NormalCell) laberynth.get(ppos[0]).get(ppos[1])); // Si la cel·la actual del jugador es de tipus normal, haurem de revisar si te algun habitant
+
+                if (ncell.getInhabitant() == InhabitantType.BAT)
+                    d = Danger.BAT; // Si habita un ratpenat, el perill sera de tipus BAT
+
+                else if (ncell.getInhabitant() == InhabitantType.WUMPUS)
+                    d = Danger.WUMPUS; // Si habita el Wumpus, el perill sera de tipus WUMPUS
+            }
+        }
+
+        return d;
+    }
+
+    public PowerUp getPowerUp() {
+        PowerUp p = PowerUp.NONE;
+
+        if (!this.laberynth.isEmpty() && ppos != null) {
+            if (this.laberynth.get(ppos[0]).get(ppos[1]).getCtype() == CellType.POWERUP) {
+                PowerUpCell pcell = new PowerUpCell((PowerUpCell) laberynth.get(ppos[0]).get(ppos[1]));
+                p = pcell.consumePowerUp();
+            }
+        }
+
+        return p;
+    }
+
+    public int[] batKidnapping() { // Mirar si esta bé, potser s'ha d'arreglar
+        int[] newPos = null;
+
+        if (!this.laberynth.isEmpty() && ppos != null && getDanger() == Danger.BAT) {
+            newPos = new int[COORDS]; // = {0, 0}
+            int[] lastPos = {ppos[0],ppos[1]};
+            do {
+                newPos = getInitialCell();
+                //newPos = randomCoordsLaberynthSafe();
+            } while (newPos[0] == lastPos[0] && newPos[1] == lastPos[1]);
+        }
+
+        return newPos;
     }
 
     private boolean checkCorrectCell(int row, int col) {
