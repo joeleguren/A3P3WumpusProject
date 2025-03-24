@@ -110,7 +110,7 @@ public class WumpusLaberynth {
         if (!(laberynth.isEmpty())) {
             boolean placed = false;
             Random r = new Random();
-            int numRnd = r.nextInt(0, countNormalCells(true)+1);
+            int numRnd = r.nextInt(0, countNormalCells(true) + 1);
 
             int contador = 0;
             int i = 0;
@@ -118,18 +118,14 @@ public class WumpusLaberynth {
 
             while (i < laberynth.size() && !placed) {
                 while (j < laberynth.get(i).size() && !placed) {
-
-                    if (laberynth.get(i).get(j).ctype == CellType.NORMAL) {
-                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j); // Generem una referència a la NormalCell
-                        if (ncell.getInhabitant() == InhabitantType.NONE) { // Consultem Inhabitant en la referència ncell, no ha de tindre
-                            if (contador==numRnd) {
-                                this.ppos[0]=i;
-                                this.ppos[1]=j;
-                                placed = true;
-                                laberynth.get(i).get(j).openCell(); // Obrim la cel·la
-                            }
-                            contador++;
+                    if (isSafeCell(i, j)) {
+                        if (contador == numRnd) {
+                            this.ppos[0] = i;
+                            this.ppos[1] = j;
+                            placed = true;
+                            laberynth.get(i).get(j).openCell(); // Obrim la cel·la
                         }
+                        contador++;
                     }
                     j++;
                 }
@@ -217,12 +213,15 @@ public class WumpusLaberynth {
         int[] newPos = null;
 
         if (!this.laberynth.isEmpty() && ppos != null && getDanger() == Danger.BAT) {
-            newPos = new int[COORDS]; // = {0, 0}
-            int[] lastPos = {ppos[0],ppos[1]};
-            do {
-                newPos = getInitialCell();
+            newPos = randomCoordsLaberynth(); // Genera inicialment una possible nova posició per al jugador, = {rndRow, rndCol}
+            //int[] lastPos = {ppos[0],ppos[1]};
+            while (newPos[0] == ppos[0] && newPos[1] == ppos[1]) { // Mentre les posicions siguin iguals, repeteix
+                newPos = randomCoordsLaberynth(); // Generem noves posicions.
                 //newPos = randomCoordsLaberynthSafe();
-            } while (newPos[0] == lastPos[0] && newPos[1] == lastPos[1]);
+            }
+            this.ppos[0]=newPos[0];
+            this.ppos[1]=newPos[1];
+            // laberynth.get(ppos[0]).get(ppos[1]).openCell(); aquesta línia potser fa falta, perquè el jugador es queda a la Cel·la.
         }
 
         return newPos;
@@ -236,6 +235,24 @@ public class WumpusLaberynth {
         }
 
         return isValid;
+    }
+
+    /**
+     * Una cel·la és segura si està dins del {@code laberynth}, és {@code CellType.NORMAL}, i té {@code InhabitantType.NONE}
+     * @param row fila
+     * @param col columna
+     * @return {@code True} Si la cel·la amb posició row i col és segura.
+     */
+    private boolean isSafeCell(int row, int col) {
+        boolean isSafe = false;
+        if (checkCorrectCell(row, col)) {
+            if (laberynth.get(row).get(col).ctype == CellType.NORMAL) {
+
+                NormalCell ncell = (NormalCell) laberynth.get(row).get(col);
+                isSafe = ncell.getInhabitant() == InhabitantType.NONE;
+            }
+        }
+        return isSafe;
     }
 
     /**
@@ -272,15 +289,18 @@ public class WumpusLaberynth {
             boolean added = false;
             while (!added) {
                 int[] rndpos = randomCoordsLaberynth();
-                if (rndpos != null && this.laberynth.get(rndpos[0]).get(rndpos[1]).getCtype() == CellType.NORMAL) {
+               // if (rndpos != null && isSafeCell(rndpos[0], rndpos[1])) No s'hauria de comprovar si la Cell està deshabitada també???
+                if (rndpos != null && this.laberynth.get(rndpos[0]).get(rndpos[1]).getCtype() == CellType.NORMAL) { // No comprovem inhabited!?
 
                     if (itype == InhabitantType.BAT) {
+                        // this.laberynth.get(rndpos[0]).get(rndpos[1]).setInhabitant(InhabitantType.BAT); Podriem ficar això directament
                         NormalCell ncell = new NormalCell(rndpos[0], rndpos[1]);
                         ncell.setInhabitant(InhabitantType.BAT);
                         this.laberynth.get(rndpos[0]).set(rndpos[1], new NormalCell(ncell));
                         added = true;
 
                     } else if (itype == InhabitantType.WUMPUS) {
+                        // this.laberynth.get(rndpos[0]).get(rndpos[1]).setInhabitant(InhabitantType.WUMPUS); Podriem ficar això directament
                         NormalCell ncell = new NormalCell(rndpos[0], rndpos[1]);
                         ncell.setInhabitant(InhabitantType.WUMPUS);
                         this.laberynth.get(rndpos[0]).set(rndpos[1], new NormalCell(ncell));
@@ -291,7 +311,7 @@ public class WumpusLaberynth {
                         added = true;
                     }
                 }
-                count++;
+                if (added) count++;
             }
         }
         if (itype == InhabitantType.BAT) initBats(this.laberynth);
@@ -331,7 +351,7 @@ public class WumpusLaberynth {
 
     /**
      * Genera unes cordenades random dins del {@code this.laberynth}
-     * @return {@code int[2]} Retorna dos coordenades
+     * @return {@code int[COORDS]} Retorna dos coordenades
      */
     private int[] randomCoordsLaberynth() {
 
