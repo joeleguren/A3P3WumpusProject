@@ -185,17 +185,16 @@ public class LaberynthController {
                 gameEnded = true;
             } else {
                 laberynth.startleWumpus();
-
             }
         }
     }
 
     public String getLasTraverseMessage(){
-
+        return traverseMessage;
     }
 
     public String getLastEchoes() {
-
+        return echoes;
     }
 
     public boolean isGameEnded(){
