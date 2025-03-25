@@ -9,17 +9,19 @@ public class NormalCell extends Cell{
     private InhabitantType itype;
 
     public NormalCell() {
+        super();
         super.ctype = CellType.NORMAL;
         this.itype = InhabitantType.NONE;
     }
 
-    public NormalCell(int x, int y) {
-        super(x,y);
+    public NormalCell(int row, int col) { // Canviem nom dels atributs per a no liar-nos (a row i a col), abans "x" i "y"
+        super(row,col);
         super.ctype = CellType.NORMAL;
         this.itype = InhabitantType.NONE;
     }
 
     public NormalCell(NormalCell nc) {
+        super(nc); // Aqui he afegit cridar al constructor còpia del super (Sóc Joel Eguren)
         this.itype = nc.itype;
     }
 
@@ -56,7 +58,6 @@ public class NormalCell extends Cell{
         } else {
             retorn += "Tipus NORMAL";
         }
-
         return retorn;
     }
 
