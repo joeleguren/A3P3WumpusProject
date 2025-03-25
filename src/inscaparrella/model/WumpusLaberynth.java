@@ -8,6 +8,7 @@ import java.util.Random;
 public class WumpusLaberynth {
     private static final int ENTITY = 2;
     private static final int COORDS = 2;
+    private static final int POS = 1;
     private static final int MIN_BOARD_SIZE = 5;
     private static final int MAX_BOARD_SIZE = 15;
     private static final int MIN_WELL_CELLS = 2;
@@ -22,7 +23,7 @@ public class WumpusLaberynth {
     private int[] wumpuspos;
     private int[] batspos;
 
-    WumpusLaberynth() {
+    public WumpusLaberynth() {
         this.laberynth = new ArrayList<>();
         this.ppos = null;
         this.wumpuspos = null;
@@ -214,18 +215,77 @@ public class WumpusLaberynth {
 
         if (!this.laberynth.isEmpty() && ppos != null && getDanger() == Danger.BAT) {
             newPos = randomCoordsLaberynth(); // Genera inicialment una possible nova posició per al jugador, = {rndRow, rndCol}
-            //int[] lastPos = {ppos[0],ppos[1]};
-            while (newPos[0] == ppos[0] && newPos[1] == ppos[1]) { // Mentre les posicions siguin iguals, repeteix
+
+            while (newPos[0] == ppos[0] && newPos[1] == ppos[1]) { // Mentre les posicions rnd siguin iguals a les actuals del ppos, repeteix
                 newPos = randomCoordsLaberynth(); // Generem noves posicions.
-                //newPos = randomCoordsLaberynthSafe();
+                //newPos = randomCoordsLaberynthSafe(); Aqui ho hem de preguntar
             }
             this.ppos[0]=newPos[0];
             this.ppos[1]=newPos[1];
-            // laberynth.get(ppos[0]).get(ppos[1]).openCell(); aquesta línia potser fa falta, perquè el jugador es queda a la Cel·la.
+            laberynth.get(ppos[0]).get(ppos[1]).openCell();
         }
 
         return newPos;
     }
+
+    public boolean shootArrow(ShootDirection dir) {
+
+        boolean successfulShot = false;
+
+        if (ppos != null) {
+            int prow = ppos[0];
+            int pcol = ppos[1];
+            int wrow = wumpuspos[0];
+            int wcol = wumpuspos[1];
+            
+            if (dir == ShootDirection.UP) {
+                successfulShot = checkCorrectCell(prow-POS, pcol) && prow-1 == wrow && pcol == wcol;
+
+            } else if (dir == ShootDirection.DOWN) {
+                successfulShot = checkCorrectCell(prow+POS, pcol) && prow+1 == wrow && pcol == wcol;
+
+            } else if (dir == ShootDirection.LEFT) {
+                successfulShot = checkCorrectCell(prow, pcol-POS) && prow == wrow && pcol-POS == wcol;
+
+            } else if (dir == ShootDirection.RIGHT) {
+                successfulShot = checkCorrectCell(prow, pcol+POS) && prow == wrow && pcol+POS == wcol;
+            }
+
+        }
+        return successfulShot;
+    }
+
+    public boolean startleWumpus() {
+
+        boolean scared = false;
+
+        if (!this.laberynth.isEmpty() && ppos != null) {
+            Random r = new Random();
+            int numRandom = r.nextInt(2); // En comptes de un nombre, faci boolean
+
+            if (numRandom%2 == 0) {
+                int[] rndPos = randomCoordsLaberynth();
+                while (!isSafeCell(rndPos[0], rndPos[1]) || (rndPos[0] == ppos[0] && rndPos[1] == ppos[1])) {
+                    rndPos = randomCoordsLaberynth();
+                }
+                // Intercanviar el wumpus de la posicio actual, wumpuspos
+                NormalCell wumpusNew = (NormalCell) this.laberynth.get(rndPos[0]).get(rndPos[1]); // Copiem referència com a NormalCell de la nova posició Wumpus
+                wumpusNew.setInhabitant(InhabitantType.WUMPUS); // Afegim inhabitant wumpus
+
+                NormalCell wumpusOld = (NormalCell) this.laberynth.get(wumpuspos[0]).get(wumpuspos[1]); // Copiem referència com a NormalCell on trobava el Wumpus
+                wumpusOld.setInhabitant(InhabitantType.NONE); // Eliminem inhabitant on anteriorment estava el Wumpus
+
+                // Actualitzem l'array wumpuspos amb la nova posició
+                wumpuspos[0] = rndPos[0];
+                wumpuspos[1] = rndPos[1];
+
+                scared = true;
+            }
+        }
+
+        return scared;
+    }
+
 
     private boolean checkCorrectCell(int row, int col) {
         boolean isValid = false;
@@ -289,21 +349,15 @@ public class WumpusLaberynth {
             boolean added = false;
             while (!added) {
                 int[] rndpos = randomCoordsLaberynth();
-               // if (rndpos != null && isSafeCell(rndpos[0], rndpos[1])) No s'hauria de comprovar si la Cell està deshabitada també???
-                if (rndpos != null && this.laberynth.get(rndpos[0]).get(rndpos[1]).getCtype() == CellType.NORMAL) { // No comprovem inhabited!?
+                if (rndpos != null && isSafeCell(rndpos[0], rndpos[1])) { // Comprovem que la posició no sigui null, i que sigui segura
 
+                    NormalCell ncell = (NormalCell) this.laberynth.get(rndpos[0]).get(rndpos[1]);
                     if (itype == InhabitantType.BAT) {
-                        // this.laberynth.get(rndpos[0]).get(rndpos[1]).setInhabitant(InhabitantType.BAT); Podriem ficar això directament
-                        NormalCell ncell = new NormalCell(rndpos[0], rndpos[1]);
                         ncell.setInhabitant(InhabitantType.BAT);
-                        this.laberynth.get(rndpos[0]).set(rndpos[1], new NormalCell(ncell));
                         added = true;
 
                     } else if (itype == InhabitantType.WUMPUS) {
-                        // this.laberynth.get(rndpos[0]).get(rndpos[1]).setInhabitant(InhabitantType.WUMPUS); Podriem ficar això directament
-                        NormalCell ncell = new NormalCell(rndpos[0], rndpos[1]);
                         ncell.setInhabitant(InhabitantType.WUMPUS);
-                        this.laberynth.get(rndpos[0]).set(rndpos[1], new NormalCell(ncell));
                         // this.wumpuspos = new int[ENTITY*TOTAL_WUMPUS]; Per si vulguessim col·locar mes Wumpus
                         this.wumpuspos = new int[ENTITY];
                         this.wumpuspos[0] = rndpos[0];
