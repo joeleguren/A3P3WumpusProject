@@ -103,10 +103,61 @@ public class LaberynthController {
             llegit = sc.nextLine();
         }
         laberynth.setLaberynth(tauler);
+        try {
+            fr.close();
+            br.close();
+            sc.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void saveLaberynth(String filename) {
-        FileWriter fw = new FileWriter(filename);
+        FileWriter fw;
+        String linia = "";
+
+        for (int col = 0; col < laberynth.getLaberynth().size(); col++) {
+            for (int row = 0; row < laberynth.getLaberynth().get(col).size(); row++) {
+                if (laberynth.getLaberynth().get(row).get(col).getCtype() == CellType.NORMAL){
+                    linia += "N ";
+                } else if (laberynth.getLaberynth().get(row).get(col).getCtype() == CellType.POWERUP) {
+                    linia += "P ";
+                } else if (laberynth.getLaberynth().get(row).get(col).getCtype() == CellType.WELL) {
+                    linia += "W ";
+                }
+            }
+            linia += "\n";
+
+            try {
+                fw = new FileWriter(filename);
+                fw.write(linia);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        for (int col = 0; col < laberynth.getLaberynth().size(); col++) {
+            for (int row = 0; row < laberynth.getLaberynth().get(col).size(); row++) {
+                if (laberynth.getLaberynth().get(row).get(col).getCtype() == CellType.NORMAL) {
+                    NormalCell nCell = (NormalCell) laberynth.getLaberynth().get(row).get(col);
+
+                    if (nCell.getInhabitant() == InhabitantType.WUMPUS){
+                        linia = row + " " + col + "\n";
+                    } else if (nCell.getInhabitant() == InhabitantType.BAT) {
+                        linia = row + " " + col + " ";
+                    }
+                }
+            }
+        }
+
+        try {
+            fw = new FileWriter(filename);
+            fw.write(linia);
+            fw.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean startGame(){
