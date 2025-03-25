@@ -2,8 +2,6 @@ package inscaparrella.model;
 
 import inscaparrella.utils.PowerUp;
 
-import java.util.Arrays;
-
 public class Player {
 
     private int row;
@@ -44,7 +42,7 @@ public class Player {
         return total;
     }
 
-    public boolean userPower(PowerUp pUp) {
+    public boolean usePower(PowerUp pUp) {
         boolean atac = false;
         if (pUp == PowerUp.ARROW) {
             if (powers[0]>0) {

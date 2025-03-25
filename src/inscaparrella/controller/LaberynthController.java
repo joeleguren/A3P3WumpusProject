@@ -1,10 +1,7 @@
 package inscaparrella.controller;
 
 import inscaparrella.model.*;
-import inscaparrella.utils.CellType;
-import inscaparrella.utils.InhabitantType;
-import inscaparrella.utils.MovementDirection;
-import inscaparrella.utils.ShootDirection;
+import inscaparrella.utils.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -170,11 +167,27 @@ public class LaberynthController {
     }
 
     public void movePlayer(MovementDirection direction) {
-
+        if (!isGameEnded()) {
+            laberynth.movePlayer(direction);
+            traverseCell();
+        }
+        if (!isGameEnded()) {
+            laberynth.moveBats();
+            laberynth.emitEchoes();
+        }
     }
 
     public void huntTheWumpus(ShootDirection direction) {
+        if (!isGameEnded() || player.getPowerUpQuantity(PowerUp.ARROW) > 0) {
+            player.usePower(PowerUp.ARROW);
+            if (laberynth.shootArrow(direction)){
+                won = true;
+                gameEnded = true;
+            } else {
+                laberynth.startleWumpus();
 
+            }
+        }
     }
 
     public String getLasTraverseMessage(){
@@ -186,11 +199,11 @@ public class LaberynthController {
     }
 
     public boolean isGameEnded(){
-
+        return gameEnded;
     }
 
     public boolean isGameWon(){
-
+        return won;
     }
 
     @Override
