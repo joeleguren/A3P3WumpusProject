@@ -22,7 +22,7 @@ public class WumpusLaberynth {
     private int[] wumpuspos;
     private int[] batspos;
 
-    WumpusLaberynth() {
+    public WumpusLaberynth() {
         this.laberynth = new ArrayList<>();
         this.ppos = null;
         this.wumpuspos = null;

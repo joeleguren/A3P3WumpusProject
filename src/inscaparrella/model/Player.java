@@ -29,9 +29,9 @@ public class Player {
         }
     }
 
-    public void move (int x, int y) {
-        this.row = x;
-        this.col = y;
+    public void move (int row, int col) {
+        this.row = row;
+        this.col = col;
     }
 
     public int getPowerUpQuantity (PowerUp pUp) {
