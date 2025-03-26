@@ -56,6 +56,7 @@ public class LaberynthController {
                 NormalCell nCell;
                 PowerUpCell pCell;
                 WellCell wCell;
+
                 for (row = 0; row < linia.length; row++) {
 
                     fila = new ArrayList<>();
@@ -63,12 +64,15 @@ public class LaberynthController {
                     if (linia[row].equals("N")) {
                         nCell = new NormalCell(row, col);
                         fila.add(nCell);
+
                     } else if (linia[row].equals("P")) {
                         pCell = new PowerUpCell(row, col);
                         fila.add(pCell);
+
                     }else if (linia[row].equals("W")) {
                         wCell = new WellCell(row, col);
                         fila.add(wCell);
+
                     }
 
                 }
@@ -115,12 +119,16 @@ public class LaberynthController {
 
         for (int col = 0; col < laberynth.getLaberynth().size(); col++) {
             for (int row = 0; row < laberynth.getLaberynth().get(col).size(); row++) {
+
                 if (laberynth.getLaberynth().get(row).get(col).getCtype() == CellType.NORMAL){
                     linia += "N ";
+
                 } else if (laberynth.getLaberynth().get(row).get(col).getCtype() == CellType.POWERUP) {
                     linia += "P ";
+
                 } else if (laberynth.getLaberynth().get(row).get(col).getCtype() == CellType.WELL) {
                     linia += "W ";
+
                 }
             }
             linia += "\n";
@@ -136,7 +144,9 @@ public class LaberynthController {
 
         for (int col = 0; col < laberynth.getLaberynth().size(); col++) {
             for (int row = 0; row < laberynth.getLaberynth().get(col).size(); row++) {
+
                 if (laberynth.getLaberynth().get(row).get(col).getCtype() == CellType.NORMAL) {
+
                     NormalCell nCell = (NormalCell) laberynth.getLaberynth().get(row).get(col);
 
                     if (nCell.getInhabitant() == InhabitantType.WUMPUS){
@@ -216,25 +226,33 @@ public class LaberynthController {
         if (laberynth.getDanger() == Danger.WUMPUS) {
             gameEnded = true;
             traverseMessage = "El Wumpus ha atacat i malferit al jugador";
+
         } else if (laberynth.getDanger() == Danger.BAT) {
             laberynth.batKidnapping();
             traverseMessage = "Un ratpenat s’enduu el jugador!";
             traverseCell();
+
         } else if (laberynth.getPowerUp() != PowerUp.NONE) {
             laberynth.getPowerUp();
+
             traverseMessage = "El jugador ha trobat una unitat del poder ";
+
             if (laberynth.getPowerUp() == PowerUp.JUMPER_BOOTS) {
                 traverseMessage += "JUMPER_BOOTS";
+
             } else {
                 traverseMessage += "ARROW";
             }
+
         } else if (laberynth.getDanger() == Danger.WELL) {
             if (player.getPowerUpQuantity(PowerUp.JUMPER_BOOTS) > 0) {
                 traverseMessage = "El jugador ha estat a punt de caure en un pou, per`o, per sort, portava les JUMPER BOOTS";
                 player.usePower(PowerUp.JUMPER_BOOTS);
+
             } else {
                 traverseMessage = "El jugador ha caigut en un pou i ha quedat malferit!";
                 gameEnded = true;
+
             }
         }
     }
