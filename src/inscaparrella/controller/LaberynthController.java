@@ -60,13 +60,13 @@ public class LaberynthController {
 
                     fila = new ArrayList<>();
 
-                    if (linia[row] == "N") {
+                    if (linia[row].equals("N")) {
                         nCell = new NormalCell(row, col);
                         fila.add(nCell);
-                    } else if (linia[row] == "P") {
+                    } else if (linia[row].equals("P")) {
                         pCell = new PowerUpCell(row, col);
                         fila.add(pCell);
-                    }else if (linia[row] == "W") {
+                    }else if (linia[row].equals("W")) {
                         wCell = new WellCell(row, col);
                         fila.add(wCell);
                     }
@@ -89,7 +89,7 @@ public class LaberynthController {
                             NormalCell nCell = (NormalCell) tauler.get(Integer.parseInt(linia[i])).get(Integer.parseInt(linia[i+1]));
 
                             if (nCell.getInhabitant() == InhabitantType.NONE){
-                                nCell.setInhabitant(InhabitantType.BAT);             //Posicionar Wumpus
+                                nCell.setInhabitant(InhabitantType.BAT);             //Posicionar Bat
                             }
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {}

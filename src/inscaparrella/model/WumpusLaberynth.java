@@ -138,7 +138,7 @@ public class WumpusLaberynth {
             Random r = new Random();
             int numRnd = r.nextInt(0, countNormalCells(true) + 1);
 
-            int contador = 1; // Havia de començar a 1, no a 8
+            int contador = 0;
             int i = 0;
             int j = 0;
 
@@ -445,7 +445,7 @@ public class WumpusLaberynth {
     private String returnEcho(int row, int col) {
         String echo = "";
         if (checkCorrectCell(row, col)) {
-            echo = this.laberynth.get(row).get(row).emitEcho();
+            echo = this.laberynth.get(row).get(col).emitEcho();
             if (!echo.isEmpty()) echo += "\n";
         }
         return echo;
