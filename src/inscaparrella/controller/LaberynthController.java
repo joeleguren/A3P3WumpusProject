@@ -208,9 +208,34 @@ public class LaberynthController {
     @Override
     public String toString() {
         String retorn = laberynth.toString();
+
+        return retorn;
     }
 
     private void traverseCell() {
-
+        if (laberynth.getDanger() == Danger.WUMPUS) {
+            gameEnded = true;
+            traverseMessage = "El Wumpus ha atacat i malferit al jugador";
+        } else if (laberynth.getDanger() == Danger.BAT) {
+            laberynth.batKidnapping();
+            traverseMessage = "Un ratpenat s’enduu el jugador!";
+            traverseCell();
+        } else if (laberynth.getPowerUp() != PowerUp.NONE) {
+            laberynth.getPowerUp();
+            traverseMessage = "El jugador ha trobat una unitat del poder ";
+            if (laberynth.getPowerUp() == PowerUp.JUMPER_BOOTS) {
+                traverseMessage += "JUMPER_BOOTS";
+            } else {
+                traverseMessage += "ARROW";
+            }
+        } else if (laberynth.getDanger() == Danger.WELL) {
+            if (player.getPowerUpQuantity(PowerUp.JUMPER_BOOTS) > 0) {
+                traverseMessage = "El jugador ha estat a punt de caure en un pou, per`o, per sort, portava les JUMPER BOOTS";
+                player.usePower(PowerUp.JUMPER_BOOTS);
+            } else {
+                traverseMessage = "El jugador ha caigut en un pou i ha quedat malferit!";
+                gameEnded = true;
+            }
+        }
     }
 }
