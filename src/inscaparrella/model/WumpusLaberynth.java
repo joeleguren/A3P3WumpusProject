@@ -19,13 +19,13 @@ public class WumpusLaberynth {
     private static final double FIVE_PERCENT = 0.05;
     private static final double TEN_PERCENT = 0.1;
 
-    private static final String CLOSED_CELL_SYMBOL = "#";
+    private static final String CLOSED_CELL_SYMBOL = ConsoleColors.BLUE_BOLD + "#" + ConsoleColors.RESET;
     private static final String OPENED_CELL = " ";
-    private static final String WELL_CELL_SYMBOL = "O";
-    private static final String POWERUP_CELL_SYMBOL = "&";
+    private static final String WELL_CELL_SYMBOL = ConsoleColors.PURPLE_BOLD + "O" + ConsoleColors.RESET;
+    private static final String POWERUP_CELL_SYMBOL = ConsoleColors.GREEN_BOLD + "&" + ConsoleColors.RESET;
     private static final String BAT_SYMBOL = "*";
-    private static final String WUMPUS_SYMBOL = "W";
-    private static final String PLAYER_SYMBOL = "P";
+    private static final String WUMPUS_SYMBOL = ConsoleColors.RED_BOLD_BRIGHT + "W" + ConsoleColors.RESET;
+    private static final String PLAYER_SYMBOL = ConsoleColors.RED_BOLD + "P" + ConsoleColors.RESET;
 
     private ArrayList<ArrayList<Cell>> laberynth;
     private int[] ppos;
@@ -131,14 +131,14 @@ public class WumpusLaberynth {
     }
 
 
-    public int[] getInitialCell() {
+    public int[] getInitialCell() { // Ho podriem arreglar per a vagi generant nombres randoms fins que trobi una posició apta per al jugador.
 
         if (!(laberynth.isEmpty())) {
             boolean placed = false;
             Random r = new Random();
             int numRnd = r.nextInt(0, countNormalCells(true) + 1);
 
-            int contador = 0;
+            int contador = 1; // Havia de començar a 1, no a 8
             int i = 0;
             int j = 0;
 
@@ -340,14 +340,14 @@ public class WumpusLaberynth {
         String str = "";
 
         if (isLaberynthAndPlayerReady()) {
-            str += returnEcho(ppos[0]-WumpusLaberynth.POS, ppos[1]) + "\n"; // A DALT
-            str += returnEcho(ppos[0]+WumpusLaberynth.POS, ppos[1]) + "\n"; // A BAIX
-            str += returnEcho(ppos[0], ppos[1]-WumpusLaberynth.POS) + "\n"; // ESQUERRA
-            str += returnEcho(ppos[0], ppos[1]+WumpusLaberynth.POS) + "\n";  // DRETA
-            str += returnEcho(ppos[0]-WumpusLaberynth.POS, ppos[1]-WumpusLaberynth.POS) + "\n"; // A DALT-ESQUERRA
-            str += returnEcho(ppos[0]-WumpusLaberynth.POS, ppos[1]+WumpusLaberynth.POS) + "\n"; // A DALT-DRETA
-            str += returnEcho(ppos[0]+WumpusLaberynth.POS, ppos[1]-WumpusLaberynth.POS) + "\n"; // BAIX-ESQUERRA
-            str += returnEcho(ppos[0]+WumpusLaberynth.POS, ppos[1]+WumpusLaberynth.POS) + "\n"; // BAIX-DRETA
+            str += returnEcho(ppos[0]-WumpusLaberynth.POS, ppos[1]); // A DALT
+            str += returnEcho(ppos[0]+WumpusLaberynth.POS, ppos[1]); // A BAIX
+            str += returnEcho(ppos[0], ppos[1]-WumpusLaberynth.POS); // ESQUERRA
+            str += returnEcho(ppos[0], ppos[1]+WumpusLaberynth.POS);  // DRETA
+            str += returnEcho(ppos[0]-WumpusLaberynth.POS, ppos[1]-WumpusLaberynth.POS); // A DALT-ESQUERRA
+            str += returnEcho(ppos[0]-WumpusLaberynth.POS, ppos[1]+WumpusLaberynth.POS); // A DALT-DRETA
+            str += returnEcho(ppos[0]+WumpusLaberynth.POS, ppos[1]-WumpusLaberynth.POS); // BAIX-ESQUERRA
+            str += returnEcho(ppos[0]+WumpusLaberynth.POS, ppos[1]+WumpusLaberynth.POS); // BAIX-DRETA
         }
         // dalt = row-1 col
         // baix = row+1 col
@@ -446,6 +446,7 @@ public class WumpusLaberynth {
         String echo = "";
         if (checkCorrectCell(row, col)) {
             echo = this.laberynth.get(row).get(row).emitEcho();
+            if (!echo.isEmpty()) echo += "\n";
         }
         return echo;
     }
@@ -608,25 +609,21 @@ public class WumpusLaberynth {
 
     /**
      * Retorna el nombre de NormalCells depenent el paràmetre.
-     * @param inhabited Boolean que si és True retorna count caselles NORMAL deshabitades, si és False retorna count totes caselles NORMAL.
+     * @param uninhabited Boolean que si és True retorna count caselles NORMAL deshabitades, si és False retorna count totes caselles NORMAL.
      * @return
      */
-    private int countNormalCells(boolean inhabited) {
+    private int countNormalCells(boolean uninhabited) {
         
         int count = 0;
 
         for (int i = 0; i < laberynth.size(); i++) {
             for (int j = 0; j < laberynth.get(i).size(); j++) {
-                if (laberynth.get(i).get(j).ctype == CellType.NORMAL) {
-                    if (inhabited) {
-                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j);
-                        if (ncell.getInhabitant() == InhabitantType.NONE) {
-                            count++;
-                        }
-                    }
-                    else {
+                if (uninhabited) {
+                    if (isSafeCell(i, j)) {
                         count++;
                     }
+                } else if (laberynth.get(i).get(j).ctype == CellType.NORMAL) {
+                    count++;
                 }
             }
         }
