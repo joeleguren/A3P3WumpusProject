@@ -32,7 +32,7 @@ public class LaberynthController {
         try {
             fr = new FileReader(filename);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); // Canviar excepció per un missatge d'error
         }
 
         BufferedReader br = new BufferedReader(fr);
