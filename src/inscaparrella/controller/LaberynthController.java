@@ -207,14 +207,7 @@ public class LaberynthController {
 
     @Override
     public String toString() {
-        return "WumpusController{" +
-                "laberynth=" + laberynth +
-                ", player=" + player +
-                ", traverseMessage='" + traverseMessage + '\'' +
-                ", echoes='" + echoes + '\'' +
-                ", gameEnded=" + gameEnded +
-                ", won=" + won +
-                '}';
+        String retorn = laberynth.toString();
     }
 
     private void traverseCell() {
