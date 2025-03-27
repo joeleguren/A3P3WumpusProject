@@ -40,7 +40,7 @@ public abstract class Cell {
     }
 
     public boolean isOpen() {
-        if (open) {
+        if (this.open) {
             return true;
         }
         else {

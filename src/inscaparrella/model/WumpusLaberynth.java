@@ -2,7 +2,6 @@ package inscaparrella.model;
 
 import inscaparrella.utils.*;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -133,6 +132,8 @@ public class WumpusLaberynth {
 
     public int[] getInitialCell() { // Ho podriem arreglar per a vagi generant nombres randoms fins que trobi una posició apta per al jugador.
 
+        int[] playerPos = null;
+
         if (!(laberynth.isEmpty())) {
             boolean placed = false;
             Random r = new Random();
@@ -149,6 +150,7 @@ public class WumpusLaberynth {
                             int row = i;
                             int col = j;
                             this.ppos = new int[]{row, col};
+                            playerPos = new int[]{this.ppos[0], this.ppos[1]};
                             placed = true;
                             laberynth.get(i).get(j).openCell(); // Obrim la cel·la
                         }
@@ -160,7 +162,8 @@ public class WumpusLaberynth {
                 i++;
             }
         }
-        return this.ppos;
+
+        return playerPos;
     }
 
     public int[] movePlayer(MovementDirection dir) {
@@ -288,7 +291,9 @@ public class WumpusLaberynth {
 
         if (isLaberynthAndPlayerReady()) {
             Random r = new Random();
-            int numRandom = r.nextInt(2); // En comptes de un nombre, faci boolean
+
+            int numRandom = r.nextInt(100); // En comptes de un nombre, faci boolean
+           // int numRandom = 2;
 
             if (numRandom%2 == 0) {
                 int[] rndPos = randomCoordsLaberynth();
@@ -363,7 +368,7 @@ public class WumpusLaberynth {
     public String currentCellMessage() {
         String str = "";
         if (isLaberynthAndPlayerReady()) {
-            str += this.laberynth.get(ppos[0]).get(ppos[1]); // S'ha de mirar si tenim que diferencia amb les tres filles classes
+            str += this.laberynth.get(ppos[0]).get(ppos[1]);
         }
         return str;
     }

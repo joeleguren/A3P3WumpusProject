@@ -45,11 +45,12 @@ public class LaberynthController {
 
         ArrayList<ArrayList<Cell>> tauler = new ArrayList<>();  //Tauler a retornar
 
-        int col = 0;
         int row = 0;
+        int col = 0;
+
         while (llegit != null) {
 
-            ArrayList<Cell> fila = null;
+            ArrayList<Cell> columna = null;
             String[] linia = llegit.split(" ");         //Scanner splitejat
 
             if (!Character.isDigit(llegit.charAt(0))) {
@@ -57,30 +58,33 @@ public class LaberynthController {
                 PowerUpCell pCell;
                 WellCell wCell;
 
-                for (row = 0; row < linia.length; row++) {
+                columna = new ArrayList<>();
 
-                    fila = new ArrayList<>();
+                for (col = 0; col < linia.length; col++) {
 
-                    if (linia[row].equals("N")) {
+                    if (linia[col].equals("N")) {
                         nCell = new NormalCell(row, col);
-                        fila.add(nCell);
+                        columna.add(nCell);
 
-                    } else if (linia[row].equals("P")) {
+                    } else if (linia[col].equals("P")) {
                         pCell = new PowerUpCell(row, col);
-                        fila.add(pCell);
+                        columna.add(pCell);
 
-                    }else if (linia[row].equals("W")) {
+                    }else if (linia[col].equals("W")) {
                         wCell = new WellCell(row, col);
-                        fila.add(wCell);
+                        columna.add(wCell);
 
                     }
 
                 }
 
-                tauler.add(fila);
+                tauler.add(columna);
 
             } else {
-                if (linia.length == 2 && tauler.get(Integer.parseInt(linia[0])).get(Integer.parseInt(linia[1])).getCtype() == CellType.NORMAL) {
+                int row1 = Integer.parseInt(linia[0]);
+                int col1 = Integer.parseInt(linia[1]);
+
+                if (linia.length == 2 && tauler.get(row1).get(col1).getCtype() == CellType.NORMAL) {
                     NormalCell nCell = (NormalCell) tauler.get(Integer.parseInt(linia[0])).get(Integer.parseInt(linia[1]));
 
                     if (nCell.getInhabitant() == InhabitantType.NONE){
@@ -96,12 +100,19 @@ public class LaberynthController {
                                 nCell.setInhabitant(InhabitantType.BAT);             //Posicionar Bat
                             }
                         }
-                    } catch (ArrayIndexOutOfBoundsException e) {}
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println("Ha petat");
+                    }
                 }
             }
-            col++;
 
-            llegit = sc.nextLine();
+            row++;
+
+            if (sc.hasNextLine()) {
+                llegit = sc.nextLine();
+            } else {
+                llegit = null;
+            }
         }
         laberynth.setLaberynth(tauler);
         try {
@@ -131,6 +142,7 @@ public class LaberynthController {
 
                 }
             }
+
             linia += "\n";
 
             try {
@@ -168,92 +180,127 @@ public class LaberynthController {
     }
 
     public boolean startGame(){
-        gameEnded = false;
-        won = false;
-        player.setStartingCell(laberynth.getInitialCell()[0], laberynth.getInitialCell()[1]);
-        traverseMessage = laberynth.currentCellMessage();
-        echoes = laberynth.emitEchoes();
-        return true;
+        boolean started = false;
+
+        int[] celaInicial = this.laberynth.getInitialCell();
+
+        if (celaInicial!=null) {
+            this.gameEnded = false;
+            this.won = false;
+            this.player.setStartingCell(celaInicial[0], celaInicial[1]);
+            this.traverseMessage = laberynth.currentCellMessage();
+            this.echoes = laberynth.emitEchoes();
+            started = true;
+        }
+
+        return started;
+
     }
 
     public void movePlayer(MovementDirection direction) {
         if (!isGameEnded()) {
-            laberynth.movePlayer(direction);
-            traverseCell();
+            int[] playerPos = this.laberynth.movePlayer(direction);
+
+            if (playerPos!=null) {
+                int row = playerPos[0];
+                int col = playerPos[1];
+                player.move(row, col);
+                traverseCell();
+            }
+
         }
         if (!isGameEnded()) {
-            laberynth.moveBats();
-            laberynth.emitEchoes();
+
+            this.laberynth.moveBats();
+            this.echoes = laberynth.emitEchoes();
+
         }
     }
 
     public void huntTheWumpus(ShootDirection direction) {
-        if (!isGameEnded() || player.getPowerUpQuantity(PowerUp.ARROW) > 0) {
-            player.usePower(PowerUp.ARROW);
-            if (laberynth.shootArrow(direction)){
-                won = true;
-                gameEnded = true;
+        if (!isGameEnded() || this.player.getPowerUpQuantity(PowerUp.ARROW) > 0) {
+            this.player.usePower(PowerUp.ARROW);
+            if (this.laberynth.shootArrow(direction)){
+                this.won = true;
+                this.gameEnded = true;
             } else {
-                laberynth.startleWumpus();
+                this.laberynth.startleWumpus();
             }
         }
     }
 
-    public String getLasTraverseMessage(){
-        return traverseMessage;
+    public String getLastTraverseMessage(){
+        return this.traverseMessage;
     }
 
     public String getLastEchoes() {
-        return echoes;
+        return this.echoes;
     }
 
     public boolean isGameEnded(){
-        return gameEnded;
+        return this.gameEnded;
     }
 
     public boolean isGameWon(){
-        return won;
+        return this.won;
     }
 
     @Override
     public String toString() {
-        String retorn = laberynth.toString();
+        String retorn = this.traverseMessage + "\n"; // TraverseMessage ha de retornar, currentCellMessage() + text de la informació de la cel·la  (mal, powerups...). Vigila que si cau damunt d'un bat ho repetirà varios cops. I també mira els pasos d'execució del main al pdf, que deia algo del bat.
+       // String retorn = this.laberynth.currentCellMessage() + "\n";
+        retorn += this.player.toString() + "\n";
+        retorn += getLastEchoes() + "\n";
+        retorn += this.laberynth.toString();
 
         return retorn;
     }
 
     private void traverseCell() {
-        if (laberynth.getDanger() == Danger.WUMPUS) {
-            gameEnded = true;
-            traverseMessage = "El Wumpus ha atacat i malferit al jugador";
+        Danger actualDanger = this.laberynth.getDanger();
+        if (actualDanger == Danger.WUMPUS) {
+            this.gameEnded = true;
+            this.traverseMessage = "El Wumpus ha atacat i malferit al jugador";
 
-        } else if (laberynth.getDanger() == Danger.BAT) {
-            laberynth.batKidnapping();
-            traverseMessage = "Un ratpenat s’enduu el jugador!";
-            traverseCell();
+        } else if (actualDanger == Danger.BAT) {
+            this.traverseMessage = "Un ratpenat s’enduu el jugador!";
+            int[] playerPos = this.laberynth.batKidnapping();
+            if (playerPos != null) {
+                int row = playerPos[0];
+                int col = playerPos[1];
+                this.player.move(row, col);
 
-        } else if (laberynth.getPowerUp() != PowerUp.NONE) {
-            laberynth.getPowerUp();
+                actualDanger = laberynth.getDanger(); // Aqui mira de nou el getDanger, tornem a cridar la funció
 
-            traverseMessage = "El jugador ha trobat una unitat del poder ";
+                if (actualDanger != Danger.NONE) {
+                    this.traverseMessage += "\n";
+                    traverseCell();
+                }
+            }
+        } else if (this.laberynth.getPowerUp() != PowerUp.NONE) {
+            this.laberynth.getPowerUp();
 
-            if (laberynth.getPowerUp() == PowerUp.JUMPER_BOOTS) {
-                traverseMessage += "JUMPER_BOOTS";
+            this.traverseMessage = "El jugador ha trobat una unitat del poder ";
 
+            if (this.laberynth.getPowerUp() == PowerUp.JUMPER_BOOTS) {
+                this.traverseMessage += "JUMPER_BOOTS";
+                this.player.addPower(PowerUp.JUMPER_BOOTS);
             } else {
-                traverseMessage += "ARROW";
+                this.traverseMessage += "ARROW";
+                this.player.addPower(PowerUp.ARROW);
             }
 
-        } else if (laberynth.getDanger() == Danger.WELL) {
-            if (player.getPowerUpQuantity(PowerUp.JUMPER_BOOTS) > 0) {
-                traverseMessage = "El jugador ha estat a punt de caure en un pou, per`o, per sort, portava les JUMPER BOOTS";
-                player.usePower(PowerUp.JUMPER_BOOTS);
+        } else if (actualDanger == Danger.WELL) {
+            if (this.player.getPowerUpQuantity(PowerUp.JUMPER_BOOTS) > 0) {
+                this.traverseMessage = "El jugador ha estat a punt de caure en un pou, però, per sort, portava les JUMPER BOOTS";
+                this.player.usePower(PowerUp.JUMPER_BOOTS);
 
             } else {
-                traverseMessage = "El jugador ha caigut en un pou i ha quedat malferit!";
-                gameEnded = true;
-
+                this.traverseMessage = "El jugador ha caigut en un pou i ha quedat malferit!";
+                this.gameEnded = true;
             }
+        } else if (actualDanger == Danger.NONE){ // Si no hi ha mal
+            this.traverseMessage = ""; // Reinicia traverseMessage
         }
     }
 }

@@ -14,26 +14,21 @@ public class PowerUpCell extends Cell{
     public PowerUpCell() {
         super();
         super.ctype= CellType.POWERUP;
-        Random r = new Random();
 
-        PowerUp[] types = PowerUp.values();
+        createPowerUp();
 
-        int num = r.nextInt(0, types.length);
-
-        this.power = types[num];
+ //       Random r = new Random();
+//        PowerUp[] types = PowerUp.values();
+//
+//        int num = r.nextInt(0, types.length);
+//
+//        this.power = types[num];
     }
 
     public PowerUpCell(int row, int col) {
         super(row, col);
         super.ctype= CellType.POWERUP;
-
-        Random r = new Random();
-
-        PowerUp[] types = PowerUp.values();
-
-        int num = r.nextInt(0, types.length);
-
-        this.power = types[num];
+        createPowerUp();
     }
 
     public PowerUpCell(PowerUpCell o) {
@@ -41,7 +36,7 @@ public class PowerUpCell extends Cell{
         this.power = o.power;
     }
 
-    void createPowerUp() {
+    private void createPowerUp() {
         Random r = new Random();
 
         PowerUp[] types = PowerUp.values();
