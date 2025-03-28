@@ -174,25 +174,21 @@ public class WumpusLaberynth {
 
                 if (dir == MovementDirection.UP) {
                     ppos[0] -= 1;
-                    this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
                     newCellMoved[0] = ppos[0];
                     newCellMoved[1] = ppos[1];
 
                 } else if (dir == MovementDirection.DOWN) {
                     ppos[0] += 1;
-                    this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
                     newCellMoved[0] = ppos[0];
                     newCellMoved[1] = ppos[1];
 
                 } else if (dir == MovementDirection.LEFT) {
                     ppos[1] -= 1;
-                    this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
                     newCellMoved[0] = ppos[0];
                     newCellMoved[1] = ppos[1];
 
                 } else if (dir == MovementDirection.RIGHT) {
                     ppos[1] += 1;
-                    this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
                     newCellMoved[0] = ppos[0];
                     newCellMoved[1] = ppos[1];
                 }
@@ -252,7 +248,6 @@ public class WumpusLaberynth {
             }
             this.ppos[0]=newPos[0];
             this.ppos[1]=newPos[1];
-            laberynth.get(ppos[0]).get(ppos[1]).openCell();
         }
 
         return newPos;

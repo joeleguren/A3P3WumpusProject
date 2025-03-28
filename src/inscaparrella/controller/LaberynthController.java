@@ -196,6 +196,8 @@ public class LaberynthController {
     }
 
     public void movePlayer(MovementDirection direction) {
+        ArrayList<ArrayList<Cell>> tauler = laberynth.getLaberynth();  //Tauler a retornar
+
         if (!isGameEnded()) {
             int[] playerPos = this.laberynth.movePlayer(direction);
 
@@ -203,6 +205,20 @@ public class LaberynthController {
                 int row = playerPos[0];
                 int col = playerPos[1];
                 player.move(row, col);
+
+                if (tauler.get(playerPos[0]).get(playerPos[1]).getCtype() == CellType.POWERUP && !tauler.get(playerPos[0]).get(playerPos[1]).isOpen()){
+                    if (this.laberynth.getPowerUp() == PowerUp.ARROW) {
+                        this.player.addPower(PowerUp.ARROW);
+                    } else if (this.laberynth.getPowerUp() == PowerUp.JUMPER_BOOTS) {
+                        this.player.addPower(PowerUp.JUMPER_BOOTS);
+                    }
+                }
+
+                if (!tauler.get(playerPos[0]).get(playerPos[1]).isOpen()) {
+                    tauler.get(playerPos[0]).get(playerPos[1]).openCell();
+                }
+
+                laberynth.setLaberynth(tauler);
                 traverseCell();
             }
 
@@ -214,6 +230,8 @@ public class LaberynthController {
 
         }
     }
+
+
 
     public void huntTheWumpus(ShootDirection direction) {
         if (isGameEnded() || this.player.getPowerUpQuantity(PowerUp.ARROW) > 0) { // Aqui entrava sempre, perque !isGameEnded() sempre era true mentre juguem.
@@ -250,7 +268,6 @@ public class LaberynthController {
         retorn += this.player.toString() + "\n";
         retorn += getLastEchoes() + "\n";
         retorn += this.laberynth.toString();
-
         return retorn;
     }
 
@@ -271,12 +288,14 @@ public class LaberynthController {
                 int col = playerPos[1];
                 this.player.move(row, col);
 
+                this.laberynth.getLaberynth().get(playerPos[0]).get(playerPos[1]).openCell();
+
                 actualDanger = laberynth.getDanger(); // Aqui mira de nou el getDanger, tornem a cridar la funció
 
                 if (actualDanger != Danger.NONE) { // Si el segrest del bat, el fa caure en una cela perillosa
                     this.traverseMessage += "\n";
                     traverseCell();
-                } else if (laberynth.getPowerUp() != PowerUp.NONE) { // Si no cau en una cel·la perillosa
+                }   else if(actualDanger == Danger.NONE && laberynth.getPowerUp() != PowerUp.NONE) {        //Si no hi ha perill mirem si hem de rebre poders
                     this.traverseMessage += "\n";
                     traverseCell();
                 }
@@ -289,6 +308,7 @@ public class LaberynthController {
             if (this.laberynth.getPowerUp() == PowerUp.JUMPER_BOOTS) {
                 this.traverseMessage += "JUMPER_BOOTS";
                 this.player.addPower(PowerUp.JUMPER_BOOTS);
+
             } else {
                 this.traverseMessage += "ARROW";
                 this.player.addPower(PowerUp.ARROW);

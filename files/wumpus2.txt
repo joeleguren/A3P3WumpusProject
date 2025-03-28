@@ -1,13 +1,16 @@
-N N N N N N N N 
-N N P N N P P N 
-N N N N N N N N 
-N N W N N N N N 
-N N N N N N N N 
-P N W N N N N N 
-N N N N N N N N 
-N N N N N N N N 
-N N N N N N N N 
-N N N N N P N N 
-N N N N P N P N 
-9 3
-3 7 8 5 
+N N N N N N N N N N N N N P N 
+N N N N N N N N N P N N N N N 
+N P N N N N N N N N N N N N N 
+N N N N N N N N N P N N N N N 
+N N N N N N N N N N N N N P N 
+N N N N N N W N N N N P N N N 
+N N N N N N N N N N N N N N N 
+N N N N N N N N N N N P N N W 
+N N N N N N N W W N N N N N N 
+N N N N N W N N N N N N N N N 
+N N N N N N N N N N N N N N N 
+N N N N N N N N N W N N N N N 
+P N N N N N N N N N N N N N N 
+N P N N N P N N N N N N N N N 
+9 7
+1 7 3 4 5 0 9 8 10 8 11 3 11 8 12 9 

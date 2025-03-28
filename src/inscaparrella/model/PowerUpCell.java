@@ -48,7 +48,7 @@ public class PowerUpCell extends Cell{
 
         PowerUp power = PowerUp.NONE;
 
-        if (super.open) {
+        if (!super.open) {
             power = this.power;
             this.power = PowerUp.NONE;
         }
