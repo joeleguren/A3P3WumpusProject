@@ -401,30 +401,70 @@ public class WumpusLaberynth {
 
                 if (laberynth.get(i).get(j).open) {
                     if (isPlayerInitialized() && ppos[0] == i && ppos[1] ==j) {
-                        str += WumpusLaberynth.PLAYER_SYMBOL + "  ";
-                    }
-                    else {
-                        str += WumpusLaberynth.OPENED_CELL + "  "; // En cas de que el jugador hagi recorregut per sobre
-                    }
-                }
-                else {
-                    if (laberynth.get(i).get(j).getCtype() == CellType.NORMAL) {
-                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j); // Copiem referència per a consultar
+                        if (laberynth.get(i).get(j).getCtype() == CellType.NORMAL) {
+                            NormalCell ncell = (NormalCell) laberynth.get(i).get(j);
 
-                        if (ncell.getInhabitant() == InhabitantType.BAT) {
-                            str += WumpusLaberynth.BAT_SYMBOL + "  ";
-                        } else if (ncell.getInhabitant() == InhabitantType.WUMPUS) {
-                            str += WumpusLaberynth.WUMPUS_SYMBOL + "  ";
+                            if (ncell.getInhabitant() == InhabitantType.WUMPUS) {
+                                str += WumpusLaberynth.WUMPUS_SYMBOL;
+                            } else {
+                                str += WumpusLaberynth.PLAYER_SYMBOL + "  ";
+                            }
+                        } else if(laberynth.get(i).get(j).getCtype() == CellType.WELL) {
+                            str += WumpusLaberynth.WELL_CELL_SYMBOL + "  ";
                         } else {
-                            str += WumpusLaberynth.CLOSED_CELL_SYMBOL + "  ";
+                            str += WumpusLaberynth.PLAYER_SYMBOL + "  ";
                         }
 
-                    } else if(laberynth.get(i).get(j).getCtype() == CellType.WELL) {
-                        str += WumpusLaberynth.WELL_CELL_SYMBOL + "  ";
-                    } else if (laberynth.get(i).get(j).getCtype() == CellType.POWERUP) {
-                        str += WumpusLaberynth.POWERUP_CELL_SYMBOL + "  ";
+                    } else if (laberynth.get(i).get(j).getCtype() == CellType.NORMAL) {  // Si esta oberta i no esta el jugador damunt
+                        // En cas de mode debugar, comentar aquesta linea
+                        str += WumpusLaberynth.OPENED_CELL + "  ";
+
+                        // Inici mode debugar
+//                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j);
+//
+//                        if (ncell.getInhabitant() == InhabitantType.BAT) {
+//                            str += WumpusLaberynth.BAT_SYMBOL + "  ";
+//
+//                        } else if (ncell.getInhabitant() == InhabitantType.WUMPUS) {
+//                            str += WumpusLaberynth.WUMPUS_SYMBOL + "  ";
+//                        }
+//                        else {
+//                            str += WumpusLaberynth.OPENED_CELL + "  ";
+//                        }
+                        // Fi mode debugar
                     }
+                    // Inici mode debugar
+//                    else if (laberynth.get(i).get(j).getCtype() == CellType.WELL) {
+//                        str += WumpusLaberynth.WELL_CELL_SYMBOL + "  ";
+//                    } else { // Es una powerup
+//                        //str += WumpusLaberynth.OPENED_CELL + "  "; // DESCOMENTAR, ERA UNA PROVA
+//                        str += WumpusLaberynth.POWERUP_CELL_SYMBOL + "  "; // COMENTAR ERA UNA PROVA
+//                    }
+                    // Fi mode debugar
+                } else {
+                    // En cas de mode debugar, comentar aquesta linea
+                    str += WumpusLaberynth.CLOSED_CELL_SYMBOL + "  ";
+
+                    // Inici mode debugador
+//                    if (laberynth.get(i).get(j).getCtype() == CellType.NORMAL) {
+//                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j); // Copiem referència per a consultar
+//
+//                        if (ncell.getInhabitant() == InhabitantType.BAT) {
+//                            str += WumpusLaberynth.BAT_SYMBOL + "  ";
+//                        } else if (ncell.getInhabitant() == InhabitantType.WUMPUS) {
+//                            str += WumpusLaberynth.WUMPUS_SYMBOL + "  ";
+//                        } else {
+//                            str += WumpusLaberynth.CLOSED_CELL_SYMBOL + "  ";
+//                        }
+//
+//                    } else if(laberynth.get(i).get(j).getCtype() == CellType.WELL) {
+//                        str += WumpusLaberynth.WELL_CELL_SYMBOL + "  ";
+//                    } else if (laberynth.get(i).get(j).getCtype() == CellType.POWERUP) {
+//                        str += WumpusLaberynth.POWERUP_CELL_SYMBOL + "  ";
+//                    }
+                    // Fi mode debugador
                 }
+
             }
             str += "\n";
         }

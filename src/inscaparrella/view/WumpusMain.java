@@ -59,6 +59,7 @@ public class WumpusMain {
             }
 
             while (started && !lc.isGameEnded()) {
+                System.out.println("\n\n");
                 System.out.println(lc); // Mostrem estat partida
                 System.out.print(getActionMenu()); // Mostrem opcions usuari
                 String playerAction = keyboard.next(); // Demanem opció
@@ -68,16 +69,15 @@ public class WumpusMain {
 
                 } else if (isActionValid(playerAction) && isLowerCase(playerAction)) {
                     move(lc, playerAction);
-                    System.out.println(lc.getLastTraverseMessage()); // Aqui no hauriem de cridar aquest mètode, perque llavors retorna l'ultim missatge.
-                    //System.out.println(lc.tr);
                 }
 
                 if (lc.isGameEnded() && lc.isGameWon()) {
+                    System.out.println(lc);
                     System.out.println("ENHORABONA, HAS POGUT CAÇAR AL WUMPUS");
 
                 } else if (lc.isGameEnded() && !lc.isGameWon()) {
+                    System.out.println(lc);
                     System.out.println("GAME OVER");
-
                 }
 
             }
@@ -85,6 +85,11 @@ public class WumpusMain {
 
     }
 
+    /**
+     * Mou el jugador en la posició especifi
+     * @param lc
+     * @param playerAction
+     */
     private static void move(LaberynthController lc, String playerAction) {
 
         if (playerAction.equals("w")) {
@@ -140,4 +145,3 @@ public class WumpusMain {
     }
 
 }
-
