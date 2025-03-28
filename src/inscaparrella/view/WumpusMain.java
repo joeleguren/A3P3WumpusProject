@@ -47,8 +47,12 @@ public class WumpusMain {
                     break;
                 case 2:
                     System.out.println("Crear nova partida...");
-                    System.out.println("Indica un fitxer per guardar la nova partida (per defecte files/wumpus1): ");
+                    System.out.print("Indica un fitxer per guardar la nova partida (per defecte files/wumpus2.txt): ");
                     String filenameToSave = keyboard.nextLine();
+                    if (filenameToSave.trim().isEmpty() || filenameToSave.equals("\n") || filenameToSave.isBlank()) {
+                        filenameToSave = "files" + File.separator + "wumpus2.txt";
+                    }
+                    System.out.println("\n\n");
                     lc.saveLaberynth(filenameToSave);
                     started = lc.startGame();
                     break;

@@ -125,19 +125,23 @@ public class LaberynthController {
     }
 
     public void saveLaberynth(String filename) {
+        laberynth.createNewLaberynth();             //Generar nou tauler
+        ArrayList<ArrayList<Cell>> tauler = laberynth.getLaberynth();  //Tauler a retornar
+
+
         FileWriter fw;
         String linia = "";
 
-        for (int col = 0; col < laberynth.getLaberynth().size(); col++) {
-            for (int row = 0; row < laberynth.getLaberynth().get(col).size(); row++) {
+        for (int row = 0; row < tauler.size(); row++) {
+            for (int col = 0; col < tauler.get(row).size(); col++) {
 
-                if (laberynth.getLaberynth().get(row).get(col).getCtype() == CellType.NORMAL){
+                if (tauler.get(row).get(col).getCtype() == CellType.NORMAL){
                     linia += "N ";
 
-                } else if (laberynth.getLaberynth().get(row).get(col).getCtype() == CellType.POWERUP) {
+                } else if (tauler.get(row).get(col).getCtype() == CellType.POWERUP) {
                     linia += "P ";
 
-                } else if (laberynth.getLaberynth().get(row).get(col).getCtype() == CellType.WELL) {
+                } else if (tauler.get(row).get(col).getCtype() == CellType.WELL) {
                     linia += "W ";
 
                 }
@@ -145,26 +149,20 @@ public class LaberynthController {
 
             linia += "\n";
 
-            try {
-                fw = new FileWriter(filename);
-                fw.write(linia);
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }
 
-        for (int col = 0; col < laberynth.getLaberynth().size(); col++) {
-            for (int row = 0; row < laberynth.getLaberynth().get(col).size(); row++) {
+        String batLine = "";
+        for (int row = 0; row < tauler.size(); row++) {
+            for (int col = 0; col < tauler.get(row).size(); col++) {
 
-                if (laberynth.getLaberynth().get(row).get(col).getCtype() == CellType.NORMAL) {
+                if (tauler.get(row).get(col).getCtype() == CellType.NORMAL) {
 
-                    NormalCell nCell = (NormalCell) laberynth.getLaberynth().get(row).get(col);
+                    NormalCell nCell = (NormalCell) tauler.get(row).get(col);
 
                     if (nCell.getInhabitant() == InhabitantType.WUMPUS){
-                        linia = row + " " + col + "\n";
+                        linia += row + " " + col + "\n";
                     } else if (nCell.getInhabitant() == InhabitantType.BAT) {
-                        linia = row + " " + col + " ";
+                        batLine += row + " " + col + " ";
                     }
                 }
             }
@@ -172,7 +170,7 @@ public class LaberynthController {
 
         try {
             fw = new FileWriter(filename);
-            fw.write(linia);
+            fw.write(linia + batLine);
             fw.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);

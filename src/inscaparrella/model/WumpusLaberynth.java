@@ -95,9 +95,9 @@ public class WumpusLaberynth {
         int cols = r.nextInt(WumpusLaberynth.MIN_BOARD_SIZE, (WumpusLaberynth.MAX_BOARD_SIZE+1)); // Generar nombre columnes
 
         int totalBoardCells = rows * cols;
-        System.out.println("Rows " + rows);
-        System.out.println("Cols " + cols);
-        System.out.println("Total " + totalBoardCells);
+//        System.out.println("Rows " + rows);
+//        System.out.println("Cols " + cols);
+//        System.out.println("Total " + totalBoardCells);
         initLaberynth(rows, cols);  // Inicialitzar tauler només amb NormalCells
 
         int maxWellCells = (int) (totalBoardCells * WumpusLaberynth.FIVE_PERCENT); // Calcular màxim de WellCells
