@@ -319,7 +319,7 @@ public class WumpusLaberynth {
     }
 
     public void moveBats() {
-        if (!laberynth.isEmpty() && isPlayerInitialized()) {
+        if (isLaberynthAndPlayerReady()) {
 
             for (int batIndex = 0; batIndex < batspos.length; batIndex += WumpusLaberynth.ENTITY) {
                 int[] rndPos = randomCoordsLaberynth();
