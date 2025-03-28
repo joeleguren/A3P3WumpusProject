@@ -191,6 +191,7 @@ public class WumpusLaberynth {
                     ppos[1] += 1;
                     newCellMoved[0] = ppos[0];
                     newCellMoved[1] = ppos[1];
+
                 }
             } else {
                 newCellMoved = null;
@@ -248,6 +249,7 @@ public class WumpusLaberynth {
             }
             this.ppos[0]=newPos[0];
             this.ppos[1]=newPos[1];
+            this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
         }
 
         return newPos;
@@ -412,51 +414,51 @@ public class WumpusLaberynth {
 
                     } else if (laberynth.get(i).get(j).getCtype() == CellType.NORMAL) {  // Si esta oberta i no esta el jugador damunt
                         // En cas de mode debugar, comentar aquesta linea
-                        str += WumpusLaberynth.OPENED_CELL + "  ";
+                //        str += WumpusLaberynth.OPENED_CELL + "  ";
 
                         // Inici mode debugar
-//                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j);
-//
-//                        if (ncell.getInhabitant() == InhabitantType.BAT) {
-//                            str += WumpusLaberynth.BAT_SYMBOL + "  ";
-//
-//                        } else if (ncell.getInhabitant() == InhabitantType.WUMPUS) {
-//                            str += WumpusLaberynth.WUMPUS_SYMBOL + "  ";
-//                        }
-//                        else {
-//                            str += WumpusLaberynth.OPENED_CELL + "  ";
-//                        }
+                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j);
+
+                        if (ncell.getInhabitant() == InhabitantType.BAT) {
+                            str += WumpusLaberynth.BAT_SYMBOL + "  ";
+
+                        } else if (ncell.getInhabitant() == InhabitantType.WUMPUS) {
+                            str += WumpusLaberynth.WUMPUS_SYMBOL + "  ";
+                        }
+                        else {
+                            str += WumpusLaberynth.OPENED_CELL + "  ";
+                        }
                         // Fi mode debugar
                     }
                     // Inici mode debugar
-//                    else if (laberynth.get(i).get(j).getCtype() == CellType.WELL) {
-//                        str += WumpusLaberynth.WELL_CELL_SYMBOL + "  ";
-//                    } else { // Es una powerup
-//                        //str += WumpusLaberynth.OPENED_CELL + "  "; // DESCOMENTAR, ERA UNA PROVA
-//                        str += WumpusLaberynth.POWERUP_CELL_SYMBOL + "  "; // COMENTAR ERA UNA PROVA
-//                    }
+                    else if (laberynth.get(i).get(j).getCtype() == CellType.WELL) {
+                        str += WumpusLaberynth.WELL_CELL_SYMBOL + "  ";
+                    } else { // Es una powerup
+                        //str += WumpusLaberynth.OPENED_CELL + "  "; // DESCOMENTAR, ERA UNA PROVA
+                        str += WumpusLaberynth.POWERUP_CELL_SYMBOL + "  "; // COMENTAR ERA UNA PROVA
+                    }
                     // Fi mode debugar
                 } else {
                     // En cas de mode debugar, comentar aquesta linea
-                    str += WumpusLaberynth.CLOSED_CELL_SYMBOL + "  ";
+                  //  str += WumpusLaberynth.CLOSED_CELL_SYMBOL + "  ";
 
                     // Inici mode debugador
-//                    if (laberynth.get(i).get(j).getCtype() == CellType.NORMAL) {
-//                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j); // Copiem referència per a consultar
-//
-//                        if (ncell.getInhabitant() == InhabitantType.BAT) {
-//                            str += WumpusLaberynth.BAT_SYMBOL + "  ";
-//                        } else if (ncell.getInhabitant() == InhabitantType.WUMPUS) {
-//                            str += WumpusLaberynth.WUMPUS_SYMBOL + "  ";
-//                        } else {
-//                            str += WumpusLaberynth.CLOSED_CELL_SYMBOL + "  ";
-//                        }
-//
-//                    } else if(laberynth.get(i).get(j).getCtype() == CellType.WELL) {
-//                        str += WumpusLaberynth.WELL_CELL_SYMBOL + "  ";
-//                    } else if (laberynth.get(i).get(j).getCtype() == CellType.POWERUP) {
-//                        str += WumpusLaberynth.POWERUP_CELL_SYMBOL + "  ";
-//                    }
+                    if (laberynth.get(i).get(j).getCtype() == CellType.NORMAL) {
+                        NormalCell ncell = (NormalCell) laberynth.get(i).get(j); // Copiem referència per a consultar
+
+                        if (ncell.getInhabitant() == InhabitantType.BAT) {
+                            str += WumpusLaberynth.BAT_SYMBOL + "  ";
+                        } else if (ncell.getInhabitant() == InhabitantType.WUMPUS) {
+                            str += WumpusLaberynth.WUMPUS_SYMBOL + "  ";
+                        } else {
+                            str += WumpusLaberynth.CLOSED_CELL_SYMBOL + "  ";
+                        }
+
+                    } else if(laberynth.get(i).get(j).getCtype() == CellType.WELL) {
+                        str += WumpusLaberynth.WELL_CELL_SYMBOL + "  ";
+                    } else if (laberynth.get(i).get(j).getCtype() == CellType.POWERUP) {
+                        str += WumpusLaberynth.POWERUP_CELL_SYMBOL + "  ";
+                    }
                     // Fi mode debugador
                 }
 

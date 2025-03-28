@@ -94,6 +94,7 @@ public class WumpusMain {
      * @param lc
      * @param playerAction
      */
+
     private static void move(LaberynthController lc, String playerAction) {
 
         if (playerAction.equals("w")) {

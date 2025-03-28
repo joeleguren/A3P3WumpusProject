@@ -196,30 +196,22 @@ public class LaberynthController {
     }
 
     public void movePlayer(MovementDirection direction) {
-        ArrayList<ArrayList<Cell>> tauler = laberynth.getLaberynth();  //Tauler a retornar
 
         if (!isGameEnded()) {
             int[] playerPos = this.laberynth.movePlayer(direction);
 
             if (playerPos!=null) {
+
                 int row = playerPos[0];
                 int col = playerPos[1];
                 player.move(row, col);
 
-                if (tauler.get(playerPos[0]).get(playerPos[1]).getCtype() == CellType.POWERUP && !tauler.get(playerPos[0]).get(playerPos[1]).isOpen()){
-                    if (this.laberynth.getPowerUp() == PowerUp.ARROW) {
-                        this.player.addPower(PowerUp.ARROW);
-                    } else if (this.laberynth.getPowerUp() == PowerUp.JUMPER_BOOTS) {
-                        this.player.addPower(PowerUp.JUMPER_BOOTS);
-                    }
-                }
-
-                if (!tauler.get(playerPos[0]).get(playerPos[1]).isOpen()) {
-                    tauler.get(playerPos[0]).get(playerPos[1]).openCell();
-                }
-
-                laberynth.setLaberynth(tauler);
                 traverseCell();
+
+                 if (this.laberynth.getLaberynth().get(playerPos[0]).get(playerPos[1]).isOpen()) {
+                     this.laberynth.getLaberynth().get(playerPos[0]).get(playerPos[1]).openCell();
+                 }
+
             }
 
         }
@@ -282,13 +274,17 @@ public class LaberynthController {
 
         } else if (actualDanger == Danger.BAT) {
             this.traverseMessage += "\n\t\tUn ratpenat s’enduu el jugador!";
+
             int[] playerPos = this.laberynth.batKidnapping();
+
             if (playerPos != null) {
                 int row = playerPos[0];
                 int col = playerPos[1];
                 this.player.move(row, col);
 
-                this.laberynth.getLaberynth().get(playerPos[0]).get(playerPos[1]).openCell();
+//                if (this.laberynth.getLaberynth.get(playerPos[0]).get(playerPos[1]).isOpen()) {
+//                    this.laberynth.getLaberynth.get(playerPos[0]).get(playerPos[1]).openCell();
+//                }
 
                 actualDanger = laberynth.getDanger(); // Aqui mira de nou el getDanger, tornem a cridar la funció
 
@@ -299,6 +295,7 @@ public class LaberynthController {
                     this.traverseMessage += "\n";
                     traverseCell();
                 }
+
             }
         } else if (this.laberynth.getPowerUp() != PowerUp.NONE) {
             this.laberynth.getPowerUp();
@@ -312,6 +309,7 @@ public class LaberynthController {
             } else {
                 this.traverseMessage += "ARROW";
                 this.player.addPower(PowerUp.ARROW);
+
             }
 
         } else if (actualDanger == Danger.WELL) {

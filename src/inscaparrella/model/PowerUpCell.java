@@ -73,8 +73,11 @@ public class PowerUpCell extends Cell{
     @Override
     public String toString() {
         String str = super.toString() + " - Tipus POWERUP";
-
-            if (!(power==PowerUp.NONE)) str += " (concedeix el poder " + power.name() + ")";
+            if (power!=PowerUp.NONE) {
+                str += " (concedeix el poder " + power.name() + ")";
+            } else if (super.isOpen()) {
+                str += " (ja ha concedit un poder " + power.name() + ")";
+            }
 
         return str;
     }
