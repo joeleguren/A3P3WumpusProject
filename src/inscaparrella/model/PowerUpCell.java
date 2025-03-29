@@ -60,7 +60,7 @@ public class PowerUpCell extends Cell{
     public String emitEcho() {
         String str = "";
 
-        if (!(power==PowerUp.NONE)) str += "Clic, clic...";
+        if (!(power==PowerUp.NONE)) str += "\tClic, clic...";
 
         return str;
     }

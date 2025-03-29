@@ -1,10 +1,12 @@
 package inscaparrella.view;
 
 import inscaparrella.controller.LaberynthController;
+import inscaparrella.utils.ConsoleColors;
 import inscaparrella.utils.MovementDirection;
 import inscaparrella.utils.ShootDirection;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -16,6 +18,7 @@ import java.util.Scanner;
  */
 
 public class WumpusMain {
+
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);
         LaberynthController lc = new LaberynthController();
@@ -27,38 +30,49 @@ public class WumpusMain {
 
             System.out.print("\n" + getMenu());
             System.out.print("Opció: ");
-            option = keyboard.nextInt();
-            keyboard.nextLine();
+            try {
+                option = keyboard.nextInt();
+                keyboard.nextLine();
+            } catch (Exception e) {
+                keyboard.nextLine(); // Neteja el buffer
+                option = -1; // Per a que surti opció per defecte.
+            }
 
             switch (option) {
                 case 0:
-                    System.out.println("Sortint...");
+                    System.out.println(ConsoleColors.GREEN_BOLD + "Sortint..." + ConsoleColors.RESET);
                     break;
                 case 1:
-                    System.out.println("Carregar partida...");
                     System.out.print("Indica quin fitxer de partida vols carrregar (per defecte files/wumpus1.txt): ");
                     String filename = keyboard.nextLine();
                     if (filename.trim().isEmpty() || filename.equals("\n") || filename.isBlank())  {
                         filename = "files" + File.separator + "wumpus1.txt";
                     }
-                    lc.loadLaberynth(filename);
-                    started = lc.startGame();
+                    try {
+                        lc.loadLaberynth(filename);
+                        started = lc.startGame();
+                    } catch (Exception e) {
+                        System.out.println(ConsoleColors.RED_BOLD + "ERROR: " + ConsoleColors.RED + "el fitxer no existeix o està mal format." + ConsoleColors.RESET);
+                    }
                     break;
                 case 2:
-                    System.out.println("Crear nova partida...");
                     System.out.print("Indica un fitxer per guardar la nova partida (per defecte files/wumpus2.txt): ");
                     String filenameToSave = keyboard.nextLine();
                     if (filenameToSave.trim().isEmpty() || filenameToSave.equals("\n") || filenameToSave.isBlank()) {
                         filenameToSave = "files" + File.separator + "wumpus2.txt";
                     }
                     System.out.println("\n\n");
-                    lc.saveLaberynth(filenameToSave);
-                    started = lc.startGame();
+
+                    try {
+                        lc.saveLaberynth(filenameToSave);
+                        started = lc.startGame();
+                    } catch (IOException e) {
+                        System.out.println(ConsoleColors.RED_BOLD + "ERROR: " + ConsoleColors.RED +"la partida no s'ha pogut guardar." + ConsoleColors.RESET);
+                    }
                     break;
                 default:
                     System.out.println("Opció incorrecta...");
                     break;
-
             }
 
             while (started && !lc.isGameEnded()) {
@@ -67,10 +81,10 @@ public class WumpusMain {
                 System.out.print(getActionMenu()); // Mostrem opcions usuari
                 String playerAction = keyboard.next(); // Demanem opció
 
-                if (isActionValid(playerAction) && isUpperCase(playerAction)) {
+                if (isActionValid(playerAction) && isUpperCase(playerAction)) { // Disparar una fletxa
                     shoot(lc, playerAction);
 
-                } else if (isActionValid(playerAction) && isLowerCase(playerAction)) {
+                } else if (isActionValid(playerAction) && isLowerCase(playerAction)) { // Moure's
                     move(lc, playerAction);
                 }
 
@@ -82,18 +96,16 @@ public class WumpusMain {
                     started = false; // faltava ficar això
                 }
 
-
             }
         } while (option!=0);
 
     }
 
     /**
-     * Mou el jugador en la posició especifi
-     * @param lc
-     * @param playerAction
+     * Mou el jugador en la posició especificada
+     * @param lc LaberynthController
+     * @param playerAction Direcció on es vol moure (String)
      */
-
     private static void move(LaberynthController lc, String playerAction) {
 
         if (playerAction.equals("w")) {
@@ -110,19 +122,39 @@ public class WumpusMain {
         }
     }
 
+    /**
+     * Comprova si una String està en majúscules
+     * @param str
+     * @return {@code True} si una String està en majúscules
+     */
     private static boolean isUpperCase(String str) {
         return str.equals(str.toUpperCase());
     }
 
+    /**
+     * Comprova si una String està en minúscules
+     * @param str
+     * @return {@code True} si una String està en minúscules
+     */
     private static boolean isLowerCase(String str) {
         return str.equals(str.toLowerCase());
     }
 
+    /**
+     * Comprova si una acció és vàlida, és a dir, el moviment/tir està dins les possibilitats del joc.
+     * @param str
+     * @return {@code True} si l'acció (String) és vàlida.
+     */
     private static boolean isActionValid(String str) {
         str = str.toUpperCase();
         return str.equals("W") || str.equals("A") || str.equals("S") || str.equals("D");
     }
 
+    /**
+     * Dispara una fletxa en la posició especificada
+     * @param lc LaberynthController
+     * @param direction Direcció on vol disparar (String)
+     */
     private static void shoot (LaberynthController lc, String direction) {
         if (direction.equals("W")) {
             lc.huntTheWumpus(ShootDirection.UP);
@@ -134,18 +166,26 @@ public class WumpusMain {
             lc.huntTheWumpus(ShootDirection.RIGHT);
         }
     }
-    
+
+    /**
+     * Ajuda d'accions que pot realitzar el jugador
+     * @return {@code String} L'ajuda d'accions.
+     */
     private static String getActionMenu() {
         return "w -> moure amunt; s -> moure abaix; a -> moure esquerra; d -> moure dreta\n" +
         "W -> disparar amunt; S -> disparar abaix; A -> disparar esquerra; D disparar dreta\n" +
         "Opció: ";
     }
 
+    /**
+     * Menú principal del joc
+     * @return {@code String} Menú amb llistat d'opcions.
+     */
     private static String getMenu() {
-        return "~~~ HUNT THE WUMPUS ~~~\n" +
-                "   0. Sortir\n" +
-                "   1. Carregar partida\n" +
-                "   2. Crear nova partida\n";
+        return ConsoleColors.GREEN_BOLD +  "~~~ HUNT THE WUMPUS ~~~\n" + ConsoleColors.RESET +
+              "\t0. Sortir\n" +
+                "\t1. Carregar partida\n" +
+                "\t2. Crear nova partida\n";
     }
 
 }

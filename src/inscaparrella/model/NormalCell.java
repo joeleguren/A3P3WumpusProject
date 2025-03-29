@@ -36,9 +36,9 @@ public class NormalCell extends Cell{
     public String emitEcho() {
         String retorn = "";
         if (this.itype == InhabitantType.WUMPUS) {
-            retorn += "gggrrr... gggGGGGGRRRRRrrr...";
+            retorn += "\tgggrrr... gggGGGGGRRRRRrrr...";
         } else if (this.itype == InhabitantType.BAT) {
-            retorn += "Flap, flap, flap";
+            retorn += "\tFlap, flap, flap";
         }
         return retorn;
     }

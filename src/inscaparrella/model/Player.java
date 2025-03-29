@@ -68,8 +68,8 @@ public class Player {
 
     @Override
     public String toString() {
-        String retorn = "El jugador es troba a: " + this.row + " " + this.col + " ";
-        retorn += "\n Poders: \n Fletxes: " + this.powers[0] + "\n Botes: " + this.powers[1];
+        String retorn = "Jugador situat a (" + this.row + " " + this.col + ")";
+        retorn += "\nPOWERS: \n\tN_ARROWS: " + this.powers[0] + "\n\tN_JUMPER_BOOTS: " + this.powers[1];
         return retorn;
     }
 }

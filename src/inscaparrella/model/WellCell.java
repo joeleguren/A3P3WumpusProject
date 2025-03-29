@@ -19,7 +19,7 @@ public class WellCell extends Cell {
 
     @Override
     public String emitEcho() {
-        return "FFFFfffff...";
+        return "\tFFFFfffff...";
     }
 
     @Override
