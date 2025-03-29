@@ -207,11 +207,6 @@ public class LaberynthController {
                 player.move(row, col);
 
                 traverseCell();
-
-                 if (this.laberynth.getLaberynth().get(playerPos[0]).get(playerPos[1]).isOpen()) {
-                     this.laberynth.getLaberynth().get(playerPos[0]).get(playerPos[1]).openCell();
-                 }
-
             }
 
         }
@@ -264,53 +259,16 @@ public class LaberynthController {
     }
 
     private void traverseCell() {
+
         Danger actualDanger = this.laberynth.getDanger();
 
         this.traverseMessage = this.laberynth.currentCellMessage();
 
+        PowerUp actualPower = this.laberynth.getPowerUp();
+
         if (actualDanger == Danger.WUMPUS) {
             this.gameEnded = true;
             this.traverseMessage += "\n\t\tEl Wumpus ha atacat i malferit al jugador";
-
-        } else if (actualDanger == Danger.BAT) {
-            this.traverseMessage += "\n\t\tUn ratpenat s’enduu el jugador!";
-
-            int[] playerPos = this.laberynth.batKidnapping();
-
-            if (playerPos != null) {
-                int row = playerPos[0];
-                int col = playerPos[1];
-                this.player.move(row, col);
-
-//                if (this.laberynth.getLaberynth.get(playerPos[0]).get(playerPos[1]).isOpen()) {
-//                    this.laberynth.getLaberynth.get(playerPos[0]).get(playerPos[1]).openCell();
-//                }
-
-                actualDanger = laberynth.getDanger(); // Aqui mira de nou el getDanger, tornem a cridar la funció
-
-                if (actualDanger != Danger.NONE) { // Si el segrest del bat, el fa caure en una cela perillosa
-                    this.traverseMessage += "\n";
-                    traverseCell();
-                }   else if(actualDanger == Danger.NONE && laberynth.getPowerUp() != PowerUp.NONE) {        //Si no hi ha perill mirem si hem de rebre poders
-                    this.traverseMessage += "\n";
-                    traverseCell();
-                }
-
-            }
-        } else if (this.laberynth.getPowerUp() != PowerUp.NONE) {
-            this.laberynth.getPowerUp();
-
-            this.traverseMessage += "\n\t\tEl jugador ha trobat una unitat del poder ";
-
-            if (this.laberynth.getPowerUp() == PowerUp.JUMPER_BOOTS) {
-                this.traverseMessage += "JUMPER_BOOTS";
-                this.player.addPower(PowerUp.JUMPER_BOOTS);
-
-            } else {
-                this.traverseMessage += "ARROW";
-                this.player.addPower(PowerUp.ARROW);
-
-            }
 
         } else if (actualDanger == Danger.WELL) {
             if (this.player.getPowerUpQuantity(PowerUp.JUMPER_BOOTS) > 0) {
@@ -321,8 +279,85 @@ public class LaberynthController {
                 this.traverseMessage += "\n\t\tEl jugador ha caigut en un pou i ha quedat malferit!";
                 this.gameEnded = true;
             }
-        } else if (actualDanger == Danger.NONE){ // Si no hi ha mal
-            this.traverseMessage += " ";
+        } else if (actualDanger == Danger.BAT) {
+
+            int[] playerPos = this.laberynth.batKidnapping();
+            this.traverseMessage += "\n" + laberynth.currentCellMessage() + "\n\t\tUn ratpenat s’enduu el jugador!";
+
+            if (playerPos != null) {
+                int row = playerPos[0];
+                int col = playerPos[1];
+                this.player.move(row, col);
+
+                this.traverseMessage += "\n";
+                traverseCell();
+            }
+
+        } else if (actualPower != PowerUp.NONE) {
+
+            this.traverseMessage += "\n\t\tEl jugador ha trobat una unitat del poder ";
+
+            if (actualPower == PowerUp.JUMPER_BOOTS) this.traverseMessage += "JUMPER_BOOTS";
+            else if (actualPower == PowerUp.ARROW) this.traverseMessage += "ARROW";
+
+            this.player.addPower(actualPower);
         }
+/// //////////////////////////////////////////////////////////////////////
+//        if (actualDanger == Danger.WUMPUS) {
+//            this.gameEnded = true;
+//            this.traverseMessage += "\n\t\tEl Wumpus ha atacat i malferit al jugador";
+//
+//        } else if (actualDanger == Danger.BAT) {
+//            this.traverseMessage += "\n\t\tUn ratpenat s’enduu el jugador!";
+//
+//            int[] playerPos = this.laberynth.batKidnapping();
+//
+//            if (playerPos != null) {
+//                int row = playerPos[0];
+//                int col = playerPos[1];
+//                this.player.move(row, col);
+//
+////                if (this.laberynth.getLaberynth.get(playerPos[0]).get(playerPos[1]).isOpen()) {
+////                    this.laberynth.getLaberynth.get(playerPos[0]).get(playerPos[1]).openCell();
+////                }
+//
+//                actualDanger = laberynth.getDanger(); // Aqui mira de nou el getDanger, tornem a cridar la funció
+//
+//                if (actualDanger != Danger.NONE) { // Si el segrest del bat, el fa caure en una cela perillosa
+//                    this.traverseMessage += "\n";
+//                    traverseCell();
+//                }   else if(actualDanger == Danger.NONE && laberynth.getPowerUp() != PowerUp.NONE) {        //Si no hi ha perill mirem si hem de rebre poders
+//                    this.traverseMessage += "\n";
+//                    traverseCell();
+//                }
+//
+//            }
+//        } else if (this.laberynth.getPowerUp() != PowerUp.NONE) {
+//            this.laberynth.getPowerUp();
+//
+//            this.traverseMessage += "\n\t\tEl jugador ha trobat una unitat del poder ";
+//
+//            if (this.laberynth.getPowerUp() == PowerUp.JUMPER_BOOTS) {
+//                this.traverseMessage += "JUMPER_BOOTS";
+//                this.player.addPower(PowerUp.JUMPER_BOOTS);
+//
+//            } else {
+//                this.traverseMessage += "ARROW";
+//                this.player.addPower(PowerUp.ARROW);
+//
+//            }
+//
+//        } else if (actualDanger == Danger.WELL) {
+//            if (this.player.getPowerUpQuantity(PowerUp.JUMPER_BOOTS) > 0) {
+//                this.traverseMessage += "\n\t\tEl jugador ha estat a punt de caure en un pou, però, per sort, portava les JUMPER BOOTS";
+//                this.player.usePower(PowerUp.JUMPER_BOOTS);
+//
+//            } else {
+//                this.traverseMessage += "\n\t\tEl jugador ha caigut en un pou i ha quedat malferit!";
+//                this.gameEnded = true;
+//            }
+//        } else if (actualDanger == Danger.NONE){ // Si no hi ha mal
+//            this.traverseMessage += " ";
+//        }
     }
 }

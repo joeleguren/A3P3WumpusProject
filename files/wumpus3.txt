@@ -1,6 +1,6 @@
-W N N P N N
-N N N N N N
-N P N N N N
-N N N N N N
+W P N P N P
+N N P N P P
+N P P N N N
+N P N P P N
 2 4
 3 5 3 0

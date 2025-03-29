@@ -41,7 +41,6 @@ public class WumpusMain {
                     if (filename.trim().isEmpty() || filename.equals("\n") || filename.isBlank())  {
                         filename = "files" + File.separator + "wumpus1.txt";
                     }
-                    System.out.println("\n\n");
                     lc.loadLaberynth(filename);
                     started = lc.startGame();
                     break;
@@ -75,14 +74,14 @@ public class WumpusMain {
                     move(lc, playerAction);
                 }
 
-                if (lc.isGameEnded() && lc.isGameWon()) {
+                if (lc.isGameEnded()) { // Arreglat, no tocar
                     System.out.println(lc);
-                    System.out.println("ENHORABONA, HAS POGUT CAÇAR AL WUMPUS");
-
-                } else if (lc.isGameEnded() && !lc.isGameWon()) {
-                    System.out.println(lc);
-                    System.out.println("GAME OVER");
+                    if (lc.isGameWon()) System.out.println("ENHORABONA, HAS POGUT CAÇAR AL WUMPUS");
+                    else  System.out.println("GAME OVER");
+                    lc = new LaberynthController();
+                    started = false; // faltava ficar això
                 }
+
 
             }
         } while (option!=0);

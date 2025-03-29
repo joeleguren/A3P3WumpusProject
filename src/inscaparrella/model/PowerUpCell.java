@@ -48,7 +48,7 @@ public class PowerUpCell extends Cell{
 
         PowerUp power = PowerUp.NONE;
 
-        if (!super.open) {
+        if (super.open) {  // Aixo no tocar, sino mai podrem consumir un power.
             power = this.power;
             this.power = PowerUp.NONE;
         }
@@ -75,8 +75,6 @@ public class PowerUpCell extends Cell{
         String str = super.toString() + " - Tipus POWERUP";
             if (power!=PowerUp.NONE) {
                 str += " (concedeix el poder " + power.name() + ")";
-            } else if (super.isOpen()) {
-                str += " (ja ha concedit un poder " + power.name() + ")";
             }
 
         return str;

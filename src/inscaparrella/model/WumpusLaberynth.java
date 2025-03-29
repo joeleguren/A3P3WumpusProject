@@ -174,21 +174,25 @@ public class WumpusLaberynth {
 
                 if (dir == MovementDirection.UP) {
                     ppos[0] -= 1;
+                    this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
                     newCellMoved[0] = ppos[0];
                     newCellMoved[1] = ppos[1];
 
                 } else if (dir == MovementDirection.DOWN) {
                     ppos[0] += 1;
+                    this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
                     newCellMoved[0] = ppos[0];
                     newCellMoved[1] = ppos[1];
 
                 } else if (dir == MovementDirection.LEFT) {
                     ppos[1] -= 1;
+                    this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
                     newCellMoved[0] = ppos[0];
                     newCellMoved[1] = ppos[1];
 
                 } else if (dir == MovementDirection.RIGHT) {
                     ppos[1] += 1;
+                    this.laberynth.get(ppos[0]).get(ppos[1]).openCell();
                     newCellMoved[0] = ppos[0];
                     newCellMoved[1] = ppos[1];
 
@@ -229,8 +233,8 @@ public class WumpusLaberynth {
 
         if (isLaberynthAndPlayerReady()) {
             if (this.laberynth.get(ppos[0]).get(ppos[1]).getCtype() == CellType.POWERUP) {
-                PowerUpCell pcell = new PowerUpCell((PowerUpCell) laberynth.get(ppos[0]).get(ppos[1]));
-                p = pcell.consumePowerUp();
+                PowerUpCell pcell = (PowerUpCell) laberynth.get(ppos[0]).get(ppos[1]); // Copiem referència
+                p = pcell.consumePowerUp(); // Consumim poder de la referència.
             }
         }
 
@@ -402,7 +406,7 @@ public class WumpusLaberynth {
                             NormalCell ncell = (NormalCell) laberynth.get(i).get(j);
 
                             if (ncell.getInhabitant() == InhabitantType.WUMPUS) {
-                                str += WumpusLaberynth.WUMPUS_SYMBOL;
+                                str += WumpusLaberynth.WUMPUS_SYMBOL + "  ";
                             } else {
                                 str += WumpusLaberynth.PLAYER_SYMBOL + "  ";
                             }
@@ -413,8 +417,8 @@ public class WumpusLaberynth {
                         }
 
                     } else if (laberynth.get(i).get(j).getCtype() == CellType.NORMAL) {  // Si esta oberta i no esta el jugador damunt
-                        // En cas de mode debugar, comentar aquesta linea
-                //        str += WumpusLaberynth.OPENED_CELL + "  ";
+                        // En cas de mode debugar, comentar aquesta linea, sino descomentar
+                      //  str += WumpusLaberynth.OPENED_CELL + "  ";
 
                         // Inici mode debugar
                         NormalCell ncell = (NormalCell) laberynth.get(i).get(j);
@@ -439,8 +443,8 @@ public class WumpusLaberynth {
                     }
                     // Fi mode debugar
                 } else {
-                    // En cas de mode debugar, comentar aquesta linea
-                  //  str += WumpusLaberynth.CLOSED_CELL_SYMBOL + "  ";
+                    // En cas de mode debugar, comentar aquesta linea, sino descomentar
+                 //   str += WumpusLaberynth.CLOSED_CELL_SYMBOL + "  ";
 
                     // Inici mode debugador
                     if (laberynth.get(i).get(j).getCtype() == CellType.NORMAL) {
