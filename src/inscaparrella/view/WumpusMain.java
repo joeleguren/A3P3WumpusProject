@@ -89,8 +89,8 @@ public class WumpusMain {
 
                 if (lc.isGameEnded()) { // Arreglat, no tocar
                     System.out.println(lc);
-                    if (lc.isGameWon()) System.out.println("ENHORABONA, HAS POGUT CAÇAR AL WUMPUS");
-                    else  System.out.println("GAME OVER");
+                    if (lc.isGameWon()) System.out.println(ConsoleColors.GREEN_BOLD + "ENHORABONA, HAS POGUT CAÇAR AL WUMPUS" + ConsoleColors.RESET);
+                    else  System.out.println(ConsoleColors.PURPLE_BOLD_BRIGHT + "GAME OVER" + ConsoleColors.RESET);
                     lc = new LaberynthController();
                     started = false; // faltava ficar això
                 }
