@@ -8,7 +8,7 @@ Observacions WumpusLaberynth:
 
 Observacions LaberynthController:
 En una ronda (jugador es mou), en cas que fos segrestat per un BAT, mètode "void traverseCell()" fa una crida recursiva.
-Segons l'enunciat, aquest mètode inicialitza l’atribut messageTraverse, per tant, mai podrem veure per consola si hem sigut segrestats, solament la última posició on es troba el jugador.
+Segons l'enunciat, aquest mètode inicialitza l’atribut messageTraverse, per tant, mai podrem veure per consola si hem sigut segrestats, solament l'última posició on es troba el jugador.
 Hem decidit fer el següent:
 
 - Mètode "void movePlayer(MovementDirection dir)", s'encarregarà d'esborrar traverseMessage per cada ronda (en cas de moure's).

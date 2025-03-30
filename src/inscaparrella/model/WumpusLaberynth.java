@@ -23,8 +23,8 @@ public class WumpusLaberynth {
     private static final String WELL_CELL_SYMBOL = ConsoleColors.PURPLE_BOLD + "O" + ConsoleColors.RESET;
     private static final String POWERUP_CELL_SYMBOL = ConsoleColors.GREEN_BOLD + "&" + ConsoleColors.RESET;
     private static final String BAT_SYMBOL = "*";
-    private static final String WUMPUS_SYMBOL = ConsoleColors.RED_BOLD_BRIGHT + "W" + ConsoleColors.RESET;
-    private static final String PLAYER_SYMBOL = ConsoleColors.RED_BOLD + "P" + ConsoleColors.RESET;
+    private static final String WUMPUS_SYMBOL = ConsoleColors.RED_BOLD + "W" + ConsoleColors.RESET;
+    private static final String PLAYER_SYMBOL = ConsoleColors.RED_BOLD_BRIGHT + "P" + ConsoleColors.RESET;
 
     private ArrayList<ArrayList<Cell>> laberynth;
     private int[] ppos;
@@ -421,11 +421,15 @@ public class WumpusLaberynth {
                             str += WumpusLaberynth.PLAYER_SYMBOL + "  ";
                         }
 
+                    } else if (laberynth.get(i).get(j).getCtype() == CellType.WELL) {
+                        str += WumpusLaberynth.WELL_CELL_SYMBOL + "  ";
                     }
                     // En cas de mode debugar, comentar aquest else, sino descomentar
-                    else {
+                    else  {
                         str += WumpusLaberynth.OPENED_CELL + "  ";
                     }
+
+
                     // Inici mode debugar
 //                    else if (laberynth.get(i).get(j).getCtype() == CellType.NORMAL) {  // Si esta oberta i no esta el jugador a sobre
 //
@@ -440,9 +444,6 @@ public class WumpusLaberynth {
 //                        else {
 //                            str += WumpusLaberynth.OPENED_CELL + "  ";
 //                        }
-//                    }
-//                    else if (laberynth.get(i).get(j).getCtype() == CellType.WELL) {
-//                        str += WumpusLaberynth.WELL_CELL_SYMBOL + "  ";
 //                    } else { // Es una powerup
 //                        //str += WumpusLaberynth.OPENED_CELL + "  "; // DESCOMENTAR, ERA UNA PROVA
 //                        str += WumpusLaberynth.POWERUP_CELL_SYMBOL + "  "; // COMENTAR ERA UNA PROVA

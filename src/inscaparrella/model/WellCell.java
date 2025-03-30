@@ -1,5 +1,6 @@
 package inscaparrella.model;
 import inscaparrella.utils.CellType;
+import inscaparrella.utils.ConsoleColors;
 
 public class WellCell extends Cell {
 
@@ -19,7 +20,7 @@ public class WellCell extends Cell {
 
     @Override
     public String emitEcho() {
-        return "\tFFFFfffff...";
+        return ConsoleColors.PURPLE_BOLD +  "\tFFFFfffff..." + ConsoleColors.RESET;
     }
 
     @Override

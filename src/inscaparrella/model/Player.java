@@ -1,5 +1,6 @@
 package inscaparrella.model;
 
+import inscaparrella.utils.ConsoleColors;
 import inscaparrella.utils.PowerUp;
 
 public class Player {
@@ -69,7 +70,7 @@ public class Player {
     @Override
     public String toString() {
         String retorn = "Jugador situat a (" + this.row + " " + this.col + ")";
-        retorn += "\nPOWERS: \n\tN_ARROWS: " + this.powers[0] + "\n\tN_JUMPER_BOOTS: " + this.powers[1];
+        retorn += "\nPOWERS: \n\tN_ARROWS: " + ConsoleColors.BLUE_BOLD + this.powers[0] + ConsoleColors.RESET + ConsoleColors.GREEN_BOLD +"\n\tN_JUMPER_BOOTS: " + ConsoleColors.BLUE_BOLD + this.powers[1] + ConsoleColors.RESET;
         return retorn;
     }
 }

@@ -239,11 +239,11 @@ public class LaberynthController {
 
     @Override
     public String toString() {
-        String retorn = "CEL·LA ACTUAL:\n";
+        String retorn = ConsoleColors.GREEN_BOLD + "CEL·LA ACTUAL:\n" + ConsoleColors.RESET;
         retorn += getLastTraverseMessage() + "\n";
-        retorn += "ECOS:\n";
+        retorn += ConsoleColors.GREEN_BOLD + "ECOS:\n" + ConsoleColors.RESET;
         retorn += getLastEchoes() + "\n";
-        retorn += this.player.toString() + "\n";
+        retorn += ConsoleColors.GREEN_BOLD + this.player.toString() + ConsoleColors.RESET + "\n";
         retorn += this.laberynth.toString();
         return retorn;
     }

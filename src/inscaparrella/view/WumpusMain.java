@@ -61,7 +61,6 @@ public class WumpusMain {
                     if (filenameToSave.trim().isEmpty() || filenameToSave.equals("\n") || filenameToSave.isBlank()) {
                         filenameToSave = "files" + File.separator + "wumpus2.txt";
                     }
-                    System.out.println("\n\n");
 
                     try {
                         lc.saveLaberynth(filenameToSave);

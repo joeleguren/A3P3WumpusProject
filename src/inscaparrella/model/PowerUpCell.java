@@ -1,6 +1,7 @@
 package inscaparrella.model;
 
 import inscaparrella.utils.CellType;
+import inscaparrella.utils.ConsoleColors;
 import inscaparrella.utils.PowerUp;
 
 import java.util.Objects;
@@ -60,7 +61,7 @@ public class PowerUpCell extends Cell{
     public String emitEcho() {
         String str = "";
 
-        if (!(power==PowerUp.NONE)) str += "\tClic, clic...";
+        if (!(power==PowerUp.NONE)) str += ConsoleColors.CYAN_BOLD + "\tClic, clic..." + ConsoleColors.RESET;
 
         return str;
     }

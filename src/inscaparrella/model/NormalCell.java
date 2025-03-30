@@ -1,6 +1,7 @@
 package inscaparrella.model;
 
 import inscaparrella.utils.CellType;
+import inscaparrella.utils.ConsoleColors;
 import inscaparrella.utils.InhabitantType;
 
 import java.util.Objects;
@@ -36,9 +37,9 @@ public class NormalCell extends Cell{
     public String emitEcho() {
         String retorn = "";
         if (this.itype == InhabitantType.WUMPUS) {
-            retorn += "\tgggrrr... gggGGGGGRRRRRrrr...";
+            retorn += ConsoleColors.RED_BOLD + "\tgggrrr... gggGGGGGRRRRRrrr..." + ConsoleColors.RESET;
         } else if (this.itype == InhabitantType.BAT) {
-            retorn += "\tFlap, flap, flap";
+            retorn += ConsoleColors.PURPLE_BOLD_BRIGHT + "\tFlap, flap, flap" + ConsoleColors.RESET;
         }
         return retorn;
     }
@@ -52,7 +53,7 @@ public class NormalCell extends Cell{
         String retorn = super.toString() + " - ";
 
         if (this.itype == InhabitantType.WUMPUS) {
-            retorn += "Normal (habitada pel Wumpus)";
+            retorn += "NORMAL (habitada pel" + ConsoleColors.RED_BOLD + " Wumpus" + ConsoleColors.RESET +")";
         } else if (this.itype == InhabitantType.BAT) {
             retorn += "Tipus NORMAL (habitada per un ratpenat)";
         } else {
